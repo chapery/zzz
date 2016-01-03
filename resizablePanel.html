@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style>
+body,div,span,ul,li,dl,dt,dd,a,img,i,p,h1,em,i,input,button{margin:0;padding:0;}
+body{font-size:12px; color:#555; font-family:宋体; line-height:1.5;}
+ul,li{list-style:none;}
+em,i{font-style:normal;}
+.clearfix{}
+.clearfix:after{display:block; content:"."; height:0px; clear:both; visibility:hidden;}
+
+.ui-resizable{width:200px; min-width:200px; min-height:200px; border:1px solid black; position:relative; margin-left:100px; margin-top:100px; user-select:none; -webkit-user-select:none; -moz-user-select:none;}
+.ui-resizable .ui-resizable-r{width:10px; height:100%; position:absolute; top:0px; right:-5px; cursor:e-resize;}
+.ui-resizable .ui-resizable-b{width:100%; height:10px; position:absolute; bottom:-5px; left:0px; cursor:n-resize;}
+.ui-resizable .ui-resizable-rb{width:16px; height:16px; position:absolute; bottom:-8px; right:-8px; cursor:se-resize;}
+
+
+</style>
+</head>
+<body>
+<div class="ui-resizable" id="resizablePanel">人民网北京7月7日电 据新华社新华视点微博消息，在全民族抗战爆发七十八周年之际，习近平7日前往中国人民抗日战争纪念馆，参观纪念中国人民抗日战争暨世界反法西斯战争胜利70周年主题展览《伟大胜利 历史贡献》。</div>
+<!-- <script type="text/javascript" src="jquery.js"></script> -->
+<script type="text/javascript">
+function resizablePanel(obj){
+	var panel = document.getElementById(obj);
+	var r = document.createElement('div'),
+		b = document.createElement('div'),
+		rb = document.createElement('div');
+
+	r.className = 'ui-resizable-r';
+	b.className = 'ui-resizable-b';
+	rb.className = 'ui-resizable-rb';
+
+	panel.appendChild(r);
+	panel.appendChild(b);
+	panel.appendChild(rb);
+
+	r.addEventListener('mousedown',function(e){
+		mousedownhandler(e,r,'r');
+	},false);
+	b.addEventListener('mousedown',function(e){
+		mousedownhandler(e,b,'b');
+	},false);
+	rb.addEventListener('mousedown',function(e){
+		mousedownhandler(e,rb,'rb');
+	},false);
+
+	var pos_gap_x,pos_gap_y,pos_end_x,pos_end_y,offsetX,offsetY;
+	var Obj,Type;
+	var r_r = parseInt(getStyle(r,'right')),
+		b_b = parseInt(getStyle(b,'bottom')),
+		rb_r = parseInt(getStyle(rb,'right')),
+		rb_b = parseInt(getStyle(rb,'bottom'));
+
+	function mousedownhandler(e,obj,type){
+		e = e||window.event;
+		offsetX = e.pageX - obj.offsetLeft;
+		offsetY = e.pageY - obj.offsetTop;
+		Obj = obj;
+		Type = type;
+		var arrCtrl = [r,b,rb];
+		for(var i = 0; i<arrCtrl.length; i++){
+			arrCtrl[i].style.left = '';
+			arrCtrl[i].style.top = '';
+		}
+		document.addEventListener('mousemove',mousemovehandler,false);
+	};
+
+	document.addEventListener('mouseup',function(){
+		document.removeEventListener('mousemove',mousemovehandler);
+	},false);
+
+	function mousemovehandler(e){
+		e = e||window.event;
+		pos_gap_x = e.pageX - offsetX;
+		pos_gap_y = e.pageY - offsetY;
+		pos_gap_x = Math.max(pos_gap_x,parseInt(getStyle(panel,'min-width')));
+		pos_gap_y = Math.max(pos_gap_y,parseInt(getStyle(panel,'min-height')));
+		switch(Type){
+			case 'r' :
+				Obj.style.left = pos_gap_x + 'px';
+				panel.style.width = pos_gap_x - r_r + 'px';
+				break;
+			case 'b' :
+				Obj.style.top = pos_gap_y + 'px';
+				panel.style.height = pos_gap_y - b_b + 'px';
+				break;
+			case 'rb' :
+				Obj.style.left = pos_gap_x + 'px';
+				Obj.style.top = pos_gap_y + 'px';
+				panel.style.width = pos_gap_x - rb_r + 'px';
+				panel.style.height = pos_gap_y - rb_b + 'px';
+				break;
+		};
+	};
+
+};
+function getStyle(ele,attr){
+	if(ele.currentStyle){
+		return ele.currentStyle[attr];
+	}else if(window.getComputedStyle){
+		return getComputedStyle(ele,null)[attr];
+	}
+};
+resizablePanel('resizablePanel');
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>switch</title>
+	<style>
+		.switchWrap{
+			position: relative;
+			width:100px;
+			height:40px;
+			background-color:silver;
+			border-radius: 20px;
+			transition:all .2s linear;
+			-webkit-transition:all .2s linear;
+		}
+		.switchWrap .switch{
+			position:absolute;
+			left:2px;
+			top:2px;
+			width:36px;
+			height:36px;
+			background-color: white;
+			border-radius:20px;
+			transition:all .2s linear;
+			-webkit-transition:all .2s linear;
+		}
+		.switchWrap #switch{
+			display:none;
+		}
+		.switchWrap.active{
+			background-color: green;
+		}
+		.switchWrap.active .switch{
+			left:62px;
+		}
+	</style>
+</head>
+<body>
+	<div class="switchWrap"><span class="switch"></span><input id="switch" type="checkbox"></div>
+	<script>
+		var switchWrap = document.querySelector('.switchWrap');
+		var theSwitch = switchWrap.firstElementChild;
+		var switchInp = switchWrap.lastElementChild;
+		var isOn = false;
+		switchWrap.addEventListener('touchend',function(event){
+			if(!isOn){
+				switchWrap.classList.add('active');
+			}else{
+				switchWrap.classList.remove('active');
+			}
+		},false);
+		theSwitch.addEventListener('transitionend',function(event){
+			isOn = (isOn == true ? false : true);
+			switchInp.checked = isOn;
+		},false);
+	</script>
+</body>
+</html>

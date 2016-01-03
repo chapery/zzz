@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>imageData</title>
+</head>
+<body>
+<canvas id="canvas1" width="600" height='400' style="border:2px solid silver;"></canvas>
+<canvas id="canvas2" width="600" height='400' style="border:2px solid silver;"></canvas>
+<script type="text/javascript">
+	var canvas1 = document.getElementById('canvas1');
+	var ctx1 = canvas1.getContext('2d');
+	var canvas2 = document.getElementById('canvas2');
+	var ctx2 = canvas2.getContext('2d');
+	var w = canvas1.width;
+	var h = canvas1.height;
+	var img = new Image();
+	img.src = 'images/pic.jpg';
+	img.onload = function(){
+		ctx1.drawImage(img,0,0,w,h);
+		var imgData = ctx1.getImageData(0,0,w,h);
+		var temData = ctx1.getImageData(0,0,w,h);
+		var bur = 20;//模糊半径
+		for(var i=0;i<h;i++){
+			for(var j=0;j<w;j++){
+				var totalR=0,totalG=0,totalB=0,totalA=0;
+				var bt,bb,bl,br;//模糊边界
+				bt = i-bur<0 ? 0 : i-bur;
+				bb = i+bur>=h ? h-1 : i+bur;
+				bl = j-bur<0 ? 0 : j-bur;
+				br = j+bur>=w ? w-1 : j+bur;
+				for(var m=bt;m<=bb;m++){
+					for(var n=bl;n<=br;n++){
+						var r = m*w+n;
+						totalR += temData.data[r*4];
+						totalG += temData.data[r*4+1];
+						totalB += temData.data[r*4+2];
+						totalA += temData.data[r*4+3];
+					};
+				};
+
+				var totalNum = ((br-bl)+1)*((bb-bt)+1);
+				var p = i*w+j;
+				imgData.data[p*4] = totalR/totalNum;
+				imgData.data[p*4+1] = totalG/totalNum;
+				imgData.data[p*4+2] = totalB/totalNum;
+				imgData.data[p*4+3] = totalA/totalNum;
+			};
+		};
+		ctx2.putImageData(imgData,0,0,0,0,w,h);
+	};
+</script>	
+</body>
+</html>

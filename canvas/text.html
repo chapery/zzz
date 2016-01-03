@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+</head>
+<body style="font-size:40px; font-family:楷体;">
+	<div>使用用于菜单中的字体</div>
+	<canvas id="canvas"></canvas>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		canvas.width = 400;
+		canvas.height = 400;
+		canvas.style.border = '2px solid gray';
+
+		ctx.fillStyle = 'purple';
+		ctx.font = "40px 楷体";
+		ctx.fillText ("使用用于菜单中的字体",0,40,400);
+
+		var linear = ctx.createLinearGradient(0,40,400,40);
+		linear.addColorStop(0.0,'red');
+		linear.addColorStop(0.4,'green');
+		linear.addColorStop(1.0,'blue');
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = linear;
+		ctx.font = "40px 楷体";
+		ctx.strokeText("使用用于菜单中的字体",0,80,400);
+
+		var backgroundImg = new Image();
+		backgroundImg.src = '../images/texture.jpg';
+		document.body.appendChild(backgroundImg.cloneNode());
+		document.body.appendChild(backgroundImg.cloneNode());
+		backgroundImg.onload = function(){
+			var par = ctx.createPattern(backgroundImg,'repeat');
+			ctx.fillStyle = par;
+			ctx.font = "40px 楷体";
+			ctx.fillText ("使用用于菜单中的字体",0,120);
+			var textWidth = ctx.measureText('111');
+			console.dir(textWidth);
+		};
+
+	</script>
+</body>
+</html>

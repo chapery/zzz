@@ -1,0 +1,91 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+div,span,ul,li,a,img,i{margin:0;padding:0;}
+ul,li{list-style:none;}
+
+body{font-family:"Microsoft YaHei",宋体;}
+.jlSlide{width:340px; height:auto;}
+.jlSlide .picBox{width:340px; height:243px; position:relative; overflow:hidden;}
+.jlSlide .picBox ul{position:absolute; top:0px; left:0px;}
+.jlSlide .picBox li{width:340px; height:243px; float:left;}
+.jlSlide .picBox li a{display:block; position:relative;}
+.jlSlide .picBox li a img{width:340px; height:243px;}
+.jlSlide .picBox li a span{position:absolute; width:100%; height:30px; left:0px; bottom:0px; line-height:30px; background:rgba(0,0,0,0.5); background:#555\9; font-size:14px; color:#fff; text-align:center; overflow:hidden;}
+.jlSlide .slideBtn{width:28px; height:50px; position:absolute; top:96px; background:url(images/slideBtn.png) no-repeat; cursor:pointer; background-color:rgba(0,0,0,0.5); background-color:#555\9; filter:alpha(opacity=50); opacity:0.5; z-index:2;}
+.jlSlide .slideBtn:hover{ filter:alpha(opacity=100);opacity:1;}
+.jlSlide .slideBtn.prev{left:0px; background-position:0px -50px;}
+.jlSlide .slideBtn.next{right:0px; background-position:0px 0px;}
+.jlSlide .squareList{padding:10px 0px; text-align:center;}
+.jlSlide .squareList i{display:inline-block; width:7px; height:7px; background:#888; margin:0px 3px;}
+.jlSlide .squareList i.on{background:#5b8ed1;}
+</style>
+</head>
+
+<body>
+<div class="jlSlide">
+    <div class="picBox">
+        <ul class="picList">
+            <li><a href="#"><img src="images/pic.jpg" /><span>青岛国际会展中心领导参观</span></a></li>
+            <li><a href="#"><img src="images/pic.jpg" /><span>青岛国际会展中心领导参观</span></a></li>
+            <li><a href="#"><img src="images/pic.jpg" /><span>青岛国际会展中心领导参观</span></a></li>
+        </ul>
+        <div class="slideBtn prev"></div>
+        <div class="slideBtn next"></div>
+    </div>
+    <div class="squareList"><i class="on"></i></div>
+</div>
+<script type="text/javascript" src="jquery.js"></script> 
+<script type="text/javascript">
+//图片轮播
+(function(){
+	$('.jlSlide').each(function(){
+		var picBox = $(this).find('.picBox'),
+			picList = $(this).find('.picList'),
+			prevBtn = $(this).find('.slideBtn.prev'),
+			nextBtn = $(this).find('.slideBtn.next'),
+			square = $(this).find('.squareList'),
+			len = picList.children('li').size(),
+			w = picList.children('li').eq(0).width(),
+			index = 0,
+			tag = true,
+			html = '<i class="on"></i>';
+		picList.width(len*w);
+		for(var i = 1; i<len; i++){
+			html+='<i></i>';
+		};
+		square.html(html);
+		var squareI = square.find('i');
+		prevBtn.click(function(){slide("left");});
+		nextBtn.click(function(){slide("right");});
+		picBox.bind('mousewheel DOMMouseScroll',function(e){
+			if(e.originalEvent.wheelDelta<0||e.originalEvent.detail>0){
+				slide("right");
+			}else if(e.originalEvent.wheelDelta>0||e.originalEvent.detail<0){
+				slide("left");
+			};
+		});
+		function slide(dir){
+			if(tag == true){
+				tag = false;
+				if(dir == "left"){
+					index--;
+				}else if(dir == "right"){
+					index++;
+				}
+				if(index < 0){
+					index = len-1;
+				}else if(index >= len){
+					index = 0;
+				};
+				picList.animate({left:-w*index},500,function(){tag = true;});
+				squareI.eq(index).addClass('on').siblings().removeClass('on');
+			};
+		};
+	});
+})();
+</script>
+</body>
+</html>

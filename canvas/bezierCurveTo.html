@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>bezierCurveTo</title>
+</head>
+<body>
+<!-- http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html -->
+	<canvas id="mycanvas"></canvas>
+	<script>
+		var canvas = document.getElementById('mycanvas');
+		var ctx = canvas.getContext('2d');
+		var W = canvas.width = 400;
+		var H = canvas.height = 400;
+		var radius = 10;
+		var flag = true, activePoint, dx, dy;
+
+		var points = {
+						p1:{x:100,y:200},
+						p2:{x:100,y:100},
+						p3:{x:300,y:100},
+						p4:{x:300,y:200}
+					};
+
+		init(ctx);
+		canvas.onmousedown = drawStart;
+		canvas.onmousemove = drawing;
+		canvas.onmouseup = drawEnd;
+		canvas.onmouseout = drawEnd;
+
+		function init(ctx){
+			var ctx = ctx;
+			ctx.clearRect(0,0,W,H);
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = 'black';
+			ctx.strokeRect(0,0,W,H);
+			bezierCurve(points.p1.x, points.p1.y, points.p2.x, points.p2.y, points.p3.x, points.p3.y, points.p4.x, points.p4.y);
+			controlPoint(points);
+			guideLine({p1:points.p1, p2:points.p2});
+			guideLine({p1:points.p3, p2:points.p4});
+		};
+		function bezierCurve(x1,y1,x2,y2,x3,y3,x4,y4){
+			var x1 = x1, y1 = y1, x2 = x2, y2 = y2, x3 = x3, y3 = y3, x4 = x4, y4 = y4;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = 'black';
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			ctx.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+			ctx.stroke();
+		};
+		function controlPoint(points){
+			var points = points;
+			ctx.lineWidth = 1;
+			ctx.fillStyle = 'rgba(0,0,0,0.3)';
+			ctx.strokeStyle = 'red';
+			for(var p in points){
+				ctx.beginPath();
+				ctx.arc(points[p].x, points[p].y, radius, 0, Math.PI*2, false);
+				ctx.fill();
+				ctx.stroke();
+			};
+		};
+		function guideLine(points){
+			var points = points;
+			ctx.lineWidth = 1;
+			ctx.strokeStyle = 'gray';
+			ctx.beginPath();
+			for(var p in points){
+				ctx.lineTo(points[p].x,points[p].y);
+			}
+			ctx.stroke();
+		}
+		function drawStart(e){
+			for(var p in points){
+				var _dx = points[p].x - e.offsetX;
+				var _dy = points[p].y - e.offsetY;
+				if(Math.pow(_dx,2) + Math.pow(_dy,2) < Math.pow(radius,2)){
+					flag = true;
+					activePoint = p;
+					dx = _dx;
+					dy = _dy;
+					canvas.style.cursor = "move";
+				};
+			}
+		};
+		function drawing(e){
+			if(activePoint && flag){
+				points[activePoint].x = e.offsetX+dx;
+				points[activePoint].y = e.offsetY+dy;
+				init(ctx);
+			}else{
+				 return false;
+			};
+		}
+		function drawEnd(){
+			flag = false;
+			canvas.style.cursor = "default";
+		};
+	</script>
+</body>
+</html>

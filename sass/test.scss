@@ -1,0 +1,9 @@
+@mixin bluebg($blue:blue){
+	background-color: $blue;
+}
+%mg0{margin:0;}
+body{margin:0px; padding: 0px;}
+div{
+	@extend body;
+	@extend %mg0;
+}

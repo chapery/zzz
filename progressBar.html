@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+    progress{display:inline-block; width:200px; height:20px; background:black; border:none; color:red;/*ie通过color设置已完成的进度条背景色*/}
+    progress::-moz-progress-bar{background:red;}
+	progress::-webkit-progress-bar{background:black;}
+	progress::-webkit-progress-value{background:red;}
+	progress ie{display:block; height:100%; background:red;}
+</style>
+<script type="text/javascript">
+	/*ie6-ie9*/
+	if (typeof window.screenX !== "number") {
+	    document.createElement("progress");	
+	    document.createElement("ie");	
+	};
+</script>
+</head>
+<body>
+	<progress value="40" max="100"><ie style="width:40%;"></ie></progress>
+</body>
+</html>

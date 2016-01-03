@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas</title>
+	<style>
+		body{padding: 0; margin: 0;}
+        .wrap{
+            width:400px;
+            height: 400px;
+            position: relative;
+        }
+		canvas{
+			display:block;
+			padding:0;
+            margin:0;
+		}
+        #wheel{
+            position: absolute;
+            left:0;
+            top:0;
+        }
+        #pointer{
+            position: absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:auto;
+        }
+	</style>
+</head>
+<body>
+	<div class="wrap">
+        <canvas data-value="9" id="wheel">当前浏览器不支持canvas，请更换浏览器后重试</canvas>
+        <canvas id="pointer">当前浏览器不支持canvas，请更换浏览器后重试</canvas>
+    </div>
+	<script type="text/javascript">
+		var wheel = document.getElementById('wheel');
+		var pointer = document.getElementById('pointer');
+		var ctxWheel = wheel.getContext('2d');
+		var ctxPointer = pointer.getContext('2d');
+		var wheelRadius,pointerRadius;
+		wheel.width = 400;
+		wheel.height = 400;
+		pointer.width = 180;
+		pointer.height = 180;
+		wheelRadius = wheel.width/2;
+		pointerRadius = pointer.width/2;
+		//转盘内容及颜色
+		wheel.choice = [
+			{text:"0", bgColor:"red"},
+			{text:"1", bgColor:"orange"},
+			{text:"2", bgColor:"yellow"},
+			{text:"3", bgColor:"green"},
+			{text:"4", bgColor:"cyan"},
+			{text:"5", bgColor:"blue"},
+			{text:"6", bgColor:"purple"},
+			{text:"7", bgColor:"black"},
+			{text:"8", bgColor:"gray"},
+			{text:"9", bgColor:"brown"}
+		];
+		drawWheel();
+		drawPointer();
+		pointer.addEventListener('click',function(e){
+            rotate(pointer);
+		});
+		function drawWheel(){
+			ctxWheel.translate(wheelRadius,wheelRadius);
+			ctxWheel.beginPath();
+			ctxWheel.arc(0,0,wheelRadius,0,2*Math.PI,false);
+			ctxWheel.fillStyle = "silver";
+			ctxWheel.fill();
+			var angle = 360/wheel.choice.length;
+			for(var i=0; i<wheel.choice.length; i++){
+				ctxWheel.rotate(angle*Math.PI/180);
+				ctxWheel.beginPath();
+				ctxWheel.fillStyle = wheel.choice[i].bgColor;
+				ctxWheel.moveTo(0,0);
+				ctxWheel.arc(0,0,wheelRadius,(270-angle/2)*Math.PI/180,(270+angle/2)*Math.PI/180,false);
+				ctxWheel.lineTo(0,0);
+				ctxWheel.fill();
+				ctxWheel.fillStyle = 'white';
+				ctxWheel.font = "24px Arial";
+				ctxWheel.textAlign = "center";
+				ctxWheel.fillText(wheel.choice[i].text,0,-160);
+			}
+		};
+		function drawPointer(){
+			// 绘制指针
+            ctxPointer.translate(pointerRadius,pointerRadius);
+			ctxPointer.clearRect(0,0,pointerRadius*2,pointerRadius*2);
+
+			var radialColor = ctxPointer.createRadialGradient(0, 0, 5, 0, 0, 50);
+			radialColor.addColorStop(0, '#ffff00');
+			radialColor.addColorStop(0.8, '#ffd700');
+			ctxPointer.fillStyle = radialColor;
+			ctxPointer.beginPath();
+			ctxPointer.arc(0, 0, 50, 0, 2*Math.PI, false);
+			ctxPointer.fill();
+
+			ctxPointer.beginPath();
+			ctxPointer.fillStyle = 'gold';
+			ctxPointer.moveTo(0,-90);
+			ctxPointer.lineTo(15,-75);
+			ctxPointer.lineTo(15,-40);
+			ctxPointer.lineTo(-15,-40);
+			ctxPointer.lineTo(-15,-75);
+			ctxPointer.fill();
+		}
+		function rotate(obj){
+			obj.style.transition = 'all 4s cubic-bezier(0, 0.5, 0.8, 1)';
+			obj.style.transform = 'rotate(720deg)';
+			obj.addEventListener('transitionend',function(){
+				obj.style.transition = '';
+				obj.style.transform = '';
+			});
+		};
+	</script>
+</body>
+</html>

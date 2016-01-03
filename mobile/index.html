@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+	<title>index</title>
+	<style>
+		html,body,div{
+			margin:0px;
+			padding:0px;
+		}
+		article{
+			width:100%;
+			height:50px;
+			background:silver;
+			display:box;
+			display: -webkit-box;
+			display: -moz-box;
+			display:-o-box;
+			box-orient:horizontal;
+			-webkit-box-orient:horizontal;
+			-moz-box-orient:horizontal;
+			-o-box-orient:horizontal;
+			box-direction:normal;
+			-webkit-box-direction:normal;
+			-moz-box-direction:normal;
+			-o-box-direction:normal;
+			box-align:center;
+			-webkit-box-align:center;
+			-moz-box-align:center;
+			box-pack:center;
+			-webkit-box-pack:center;
+			-moz-box-pack:center;
+		}
+		article section{}
+		article section:nth-child(1){
+			background-color:red;
+			box-flex:1;
+			-webkit-box-flex:1;
+			-moz-box-flex:1;
+		}
+		article section:nth-child(2){
+			background-color:green;
+			box-flex:2;
+			-webkit-box-flex:2;
+			-moz-box-flex:2;
+		}
+		article section:nth-child(3){
+			background-color:blue;
+		}
+	</style>
+	<style>
+		nav{
+			height:200px;
+			background-color: cyan;
+			display:flex;
+			flex-direction:row;
+			flex-wrap:wrap;
+			justify-content:center;
+			align-items:center;
+			align-content:center;
+		}
+		nav a{
+			color:white;
+		}
+		nav a:nth-child(1){
+			background-color: red;
+			flex:0 1 100px;
+			height:auto;
+		}
+		nav a:nth-child(2){
+			background-color: green;
+			flex:0 1 100px;
+			word-break:break-all;
+			height:auto;
+		}
+		nav a:nth-child(3){
+			background-color: blue;
+			flex:0 1 240px;
+			height:auto;
+		}
+	</style>
+	<style>
+		.flex-container {
+			background-color: pink;
+			display: flex;
+		}
+		.profile {
+			margin-left: auto;
+		}
+	</style>
+	<style>
+		.multi-line{
+			 display:-webkit-box;
+			-webkit-box-orient:vertical;
+			-webkit-line-clamp:2;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			word-break:break-all; 
+		}
+	</style>
+</head>
+<body>
+	<article>
+		<section>1</section>
+		<section>2</section>
+		<section>3</section>
+	</article>
+	<nav>
+		<a href="#">1</a>
+		<a href="#">2222222222222222222222222222</a>
+		<a href="#">3</a>
+	</nav>
+	<div class="flex-container">
+		<div class="logo">Logo</div>
+		<div class="profile">Profile</div>
+		<div class="profile">Profile</div>
+	</div>
+	<div class="multi-line">微克微克微克微克微克微克微克微克微克微克微微克微克微克微克微克微克微克微克微克微克微微克微克微微克微克微克微克微克微克微克微克微克微克微微克微克微克微克微克微</div>
+	<div id="touchPanel" style="width:100%; height:100px; background:gray;">触摸板</div>
+	<script>
+	var panel = document.querySelector('#touchPanel');
+	panel.addEventListener('touchstart',function(event){
+		console.log(event.touches[0]);
+	});
+	</script>
+</body>
+</html>

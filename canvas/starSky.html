@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+</head>
+<body>
+	<canvas id="mycanvas" width="1400" height="600" style="border:1px solid #000;"></canvas>
+</body>
+<script>
+	var mycanvas = document.getElementById('mycanvas');
+	var ctx = mycanvas.getContext('2d');
+	var w = mycanvas.width;
+	var h = mycanvas.height;
+
+	//背景
+	var linear = ctx.createLinearGradient(0,0,0,h)
+	linear.addColorStop(0,'#000');
+	linear.addColorStop(0.8,'#555');
+	linear.addColorStop(1,'#777');
+	ctx.fillStyle = linear;
+	ctx.fillRect(0,0,w,h);
+
+	for(var i=0; i<600; i++){
+		var randX = Math.round(Math.random()*w);
+		var randY = Math.round(Math.random()*h*0.8);
+		var randOuterRadius = Math.round(Math.random()*5);
+		var randStartAngle = Math.round(Math.random()*2*Math.PI);
+		drawStar(randX,randY,randOuterRadius,5,0.4,randStartAngle);
+	}
+	// drawStar(300, 300, 200, 5, 0.4);\
+	drawMoon(1200,100,100,1.5,30);
+	function drawStar(x,y,r,n,ratio,startAngle){
+		var centerX = x,
+			centerY = y,
+			outerRadius = r,
+			n = n,
+			innerRadius = r*ratio,
+			startAngle = startAngle || 0;
+		var stepAngle = 2*Math.PI/n;
+		ctx.save();
+		ctx.translate(x,y);
+		ctx.lineWidth = 4;
+		ctx.fillStyle = 'gold';
+		ctx.beginPath();
+		for(var i = 0; i<n; i++){
+			ctx.lineTo(outerRadius*Math.sin(startAngle + stepAngle*i),-outerRadius*Math.cos(startAngle + stepAngle*i));
+			ctx.lineTo(innerRadius*Math.sin(startAngle + stepAngle/2 + stepAngle*i),-innerRadius*Math.cos(startAngle + stepAngle/2 + stepAngle*i));
+		};
+		ctx.closePath();
+		ctx.fill();
+		ctx.restore();
+	}
+	function drawMoon(x,y,r,ratio,angle){
+		var x = x,
+			y = y,
+			r = r,
+			ratio = ratio,//内弧半径与外弧半径的比值（大于1）
+			angle = angle*Math.PI/180;
+		ctx.save();
+		ctx.translate(x,y);
+		ctx.rotate(angle);
+		ctx.beginPath();
+		ctx.fillStyle = 'gold';
+		ctx.moveTo(0,r);
+		ctx.arc(0,0,r,1/4*Math.PI*2,-1/4*Math.PI*2,true);
+		ctx.arcTo(r*ratio,0,0,r,Math.sqrt(Math.pow(r,2)+Math.pow(r*ratio,2))/ratio);
+		ctx.closePath();
+		ctx.fill();
+		ctx.restore();
+	}
+
+</script>
+</html>

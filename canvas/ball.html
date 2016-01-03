@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<script>
+		var canvas = document.getElementById("canvas");
+		canvas.width = 800;
+		canvas.height = 600;
+		canvas.style.outline = '1px solid gray';
+		var ctx = canvas.getContext('2d');
+
+		var balls = [];
+		draw();
+		setInterval(reDraw,30);
+		// canvas.addEventListener('click',handle);
+		function draw(){
+			for(var i=0; i<100; i++){
+				var x = Math.random()*canvas.width,
+					y = Math.random()*canvas.height,
+					r = Math.random()*40+10,
+					Vx = Math.random()*10-5,
+					Vy = Math.random()*10-5,
+					bg = 'rgb('+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+')';
+
+				var ball = {};
+
+				if(x <= r){ball.x = r; }
+				else if(x >= canvas.width-r){ball.x = canvas.width-r; }
+				else{ball.x = x; }
+
+				if(y <= r){ball.y = r; }
+				else if(y >= canvas.height-r){ball.y = canvas.height-r; }
+				else{ball.y = y; }
+
+				ball.r = r;
+				ball.Vx = Vx;
+				ball.Vy = Vy;
+				ball.bg = bg;
+
+				balls.push(ball);
+				ctx.beginPath();
+				ctx.fillStyle = ball.bg;
+				ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2, false);
+				ctx.fill();
+			}
+		};
+		function reDraw(){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			balls.forEach(function(item){
+				runBoundary(item);
+				item.x+=item.Vx;
+				item.y+=item.Vy;
+				ctx.beginPath();
+				ctx.fillStyle = item.bg;
+				ctx.arc(item.x, item.y, item.r, 0, Math.PI*2, false);
+				ctx.fill();
+			});
+		};
+		function runBoundary(ball){
+			if(ball.x<ball.r || ball.x>canvas.width-ball.r){
+				ball.Vx = -ball.Vx;
+			};
+			if(ball.y<ball.r || ball.y>canvas.height-ball.r){
+				ball.Vy = -ball.Vy;
+			};
+		}
+		function handle(event){
+			var x = event.offsetX;
+			var y = event.offsetY;
+			balls.forEach(function(item){
+				ctx.beginPath();
+				ctx.arc(item.x, item.y, item.r, 0, Math.PI*2, false);
+				if(ctx.isPointInPath(x,y)){
+					ctx.fillStyle = "red";
+				}else{
+					ctx.fillStyle = "silver";
+				}
+				ctx.fill();
+			});
+		};
+	</script>
+</body>
+</html>

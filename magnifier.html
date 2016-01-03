@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<style>
+		#can1{
+			display: ;
+			margin:auto;
+		}
+		#can1:hover{cursor:none;}
+	</style>
+</head>
+<body>
+<canvas id="can1" width="600" height="400"></canvas>
+<script type="text/javascript">
+var canvas = document.getElementById('can1');
+var ctx = can1.getContext('2d');
+var img = new Image();
+img.src = "images/pic.jpg";
+img.onload = function(){
+	var canLarger = document.createElement('canvas');
+	var ctxLarger = canLarger.getContext('2d');
+	var canW = canvas.width;
+	var canH = canvas.height;
+	var imgW = img.naturalWidth;
+	var imgH = img.naturalHeight;
+	var ratio = imgW/canW;
+	ctx.drawImage(img,0,0,canW,canH);
+	canLarger.width = imgW;
+	canLarger.height = imgH;
+	ctxLarger.drawImage(img,0,0);
+	canvas.onmousemove = function(e){
+		ctx.clearRect(0,0,canW,canH);
+		ctx.drawImage(img,0,0,canW,canH);
+		var mPosX = e.offsetX;
+		var mPosY = e.offsetY;
+		ctx.save();
+		ctx.lineWidth = 4;
+		ctx.strokeStyle = "#00f";
+		ctx.beginPath();
+		ctx.arc(mPosX,mPosY,50,Math.PI*0,Math.PI*2,false);
+		ctx.stroke();
+		ctx.clip();
+		ctx.drawImage(canLarger,mPosX*ratio-50,mPosY*ratio-50,100,100,mPosX-50,mPosY-50,100,100);
+		ctx.restore();
+	};
+	canvas.onmouseout = function(){
+		ctx.clearRect(0,0,canW,canH);
+		ctx.drawImage(img,0,0,canW,canH);
+	};
+};
+
+</script>
+</body>
+</html>
