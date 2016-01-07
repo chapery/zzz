@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+</head>
+<body>
+	<div id="dragBox" draggable="true" style="width:500px; height:400px; background:red;">
+		<!-- <img style="width:calc(100% - 40px); padding:20px; vertical-align:top;" src="../images/pic.jpg" alt="pic.jpg"> -->
+	</div>
+	<script>
+		var dragBox = document.getElementById('dragBox');
+		dragBox.addEventListener('dragover',function(event){
+			event.preventDefault();
+		});
+	</script>
+</body>
+</html>
