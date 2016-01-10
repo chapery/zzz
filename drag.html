@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<style>
+		div,ul,li,img{margin:0; padding:0;}
+		.dragtarget{
+			display: inline-block;
+			width:200px;
+			height: 200px;
+			background-color: cyan;
+		}
+		.image{
+			width:200px;
+			height: 200px;
+		}
+		.textarea{
+			width: 200px;
+			height: 200px;
+			background-color: silver;
+		}
+		.dragdestination{
+			width:200px;
+			height: 200px;
+			background-color: purple;
+		}
+	</style>
+</head>
+<body>
+	<span id="dragtarget" class="dragtarget" draggable="true"></span>
+	<img id="image" class="image" src="images/texture.jpg" alt="">
+	<textarea id="textarea" class="textarea" cols="30" rows="10">11111111111111</textarea>
+	<div id="dragdestination" class="dragdestination"></div>
+	<script>
+		var target = document.getElementById('dragtarget');
+		var destination = document.getElementById('dragdestination');
+		var image = document.getElementById('image');
+		var textarea = document.getElementById('textarea');
+
+		target.addEventListener('dragstart',function(event){
+			event.dataTransfer.effectAllowed = 'move';
+			event.dataTransfer.setData('text',"hello word!");
+			// event.dataTransfer.setData('URL',"http://www.baidu.com");
+			// event.dataTransfer.setDragImage(image,0,0);
+		});
+
+		destination.addEventListener('dragover',function(event){
+			event.preventDefault();
+		});
+		destination.addEventListener('dragleave',function(event){
+			
+		});
+		destination.addEventListener('drop',function(event){
+			event.stopPropagation();
+			event.preventDefault();
+			var text = event.dataTransfer.getData('text');
+			// var text = event.dataTransfer.getData('URL');
+			this.textContent = text;
+		});
+
+		document.body.ondragover = function(event){
+			event.preventDefault();
+		};
+		document.body.ondrop = function(event){
+			event.stopPropagation();
+			event.preventDefault();
+		};
+	</script>
+</body>
+</html>
