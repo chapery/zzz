@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<style>
+		html,body,div,ul,li,img{margin:0; padding:0;}
+		.drag_wrapper{
+			width: 100%;
+			background-color: silver;
+		}
+		.drag_wrapper .drag_item{
+			float:left;
+			width: 200px;
+			height: 200px;
+			background-color: gray;
+			margin: 20px;
+			font-size: 20px;
+			color:white;
+		}
+		.clearfix{}
+		.clearfix:after{content:''; display:block; height:0; visibility: none;}
+	</style>
+</head>
+<body>
+	<div id="drag_wrapper" class="drag_wrapper clearfix">
+		<div draggable="true" class="drag_item">1</div>
+		<div draggable="true" class="drag_item">2</div>
+		<div draggable="true" class="drag_item">3</div>
+		<div draggable="true" class="drag_item">4</div>
+	</div>
+	<script>
+		var wrapper = document.getElementById('drag_wrapper');
+		var items = wrapper.querySelectorAll('.drag_item');
+		for(var i=0; i<items.length; i++){
+			items[i].addEventListener('dragstart',function(event){
+				event.dataTransfer.effectAllowed = 'move';
+				event.dataTransfer.setData('text','hello word!');
+			});
+			items[i].addEventListener('dragover',function(event){
+				event.preventDefault();
+			});
+			items[i].addEventListener('drop',function(event){
+				event.preventDefault();
+			});
+			items[i].addEventListener('dragenter',function(event){
+			});
+		};
+		document.addEventListener('dragover',function(event){
+			event.preventDefault();
+			event.dataTransfer.dragEffect = 'none';
+		});
+		document.addEventListener('drop',function(event){
+			event.stopPropagation();
+			event.preventDefault();
+		});
+		
+
+
+	</script>
+</body>
+</html>
