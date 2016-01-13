@@ -24,28 +24,41 @@
 </head>
 <body>
 	<div id="drag_wrapper" class="drag_wrapper clearfix">
-		<div draggable="true" class="drag_item">1</div>
-		<div draggable="true" class="drag_item">2</div>
-		<div draggable="true" class="drag_item">3</div>
-		<div draggable="true" class="drag_item">4</div>
+		<div draggable="true" class="drag_item"><img src="../images/pic.jpg" width="200" height="200" alt=""></div>
+		<div draggable="true" class="drag_item"><img src="../images/texture.jpg" width="200" height="200" alt=""></div>
+		<div draggable="true" class="drag_item"><img src="../images/texture_1.jpg" width="200" height="200" alt=""></div>
+		<div draggable="true" class="drag_item"><img src="../images/borderImg.png" width="200" height="200" alt=""></div>
 	</div>
 	<script>
 		var wrapper = document.getElementById('drag_wrapper');
 		var items = wrapper.querySelectorAll('.drag_item');
 		for(var i=0; i<items.length; i++){
-			items[i].addEventListener('dragstart',function(event){
+			items.index = i;
+			items[i].setAttribute('data-order',i);
+			handle(items[i]);
+		};
+
+		function handle(obj){
+			obj.addEventListener('dragstart',function(event){
 				event.dataTransfer.effectAllowed = 'move';
-				event.dataTransfer.setData('text','hello word!');
+				event.dataTransfer.setData('text',this.dataset.order);
 			});
-			items[i].addEventListener('dragover',function(event){
+			obj.addEventListener('dragover',function(event){
 				event.preventDefault();
 			});
-			items[i].addEventListener('drop',function(event){
+			obj.addEventListener('drop',function(event){
 				event.preventDefault();
-			});
-			items[i].addEventListener('dragenter',function(event){
+				var num = event.dataTransfer.getData('text');
+				var eleDrag = wrapper.querySelector('.drag_item[data-order="'+num+'"]');
+				this.insertAdjacentHTML('afterEnd',eleDrag.outerHTML);
+				eleDrag.insertAdjacentHTML('afterEnd',this.outerHTML);
+				handle(this.nextSibling);
+				handle(eleDrag.nextSibling);
+				wrapper.removeChild(this);
+				wrapper.removeChild(eleDrag);
 			});
 		};
+
 		document.addEventListener('dragover',function(event){
 			event.preventDefault();
 			event.dataTransfer.dragEffect = 'none';
