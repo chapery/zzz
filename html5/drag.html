@@ -49,6 +49,7 @@
 			obj.addEventListener('drop',function(event){
 				event.preventDefault();
 				var num = event.dataTransfer.getData('text');
+				if(this.dataset.order == num) return ;
 				var eleDrag = wrapper.querySelector('.drag_item[data-order="'+num+'"]');
 				this.insertAdjacentHTML('afterEnd',eleDrag.outerHTML);
 				eleDrag.insertAdjacentHTML('afterEnd',this.outerHTML);

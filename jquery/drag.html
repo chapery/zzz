@@ -7,7 +7,7 @@
 		html,body,div,ul,li{margin:0; padding: 0;}
 		ul,li{list-style: none;}
 		.drag-wrapper{
-			background-color: gray;
+			background-color: silver;
 		}
 		.drag-wrapper .drag-list{
 			width: 100%;
@@ -15,12 +15,22 @@
 		.drag-wrapper .drag-list{
 			width: 100%;
 		}
+		.drag-wrapper .drag-list li{
+			float:left;
+			width: 100px;
+			height: 100px;
+			background-color:gray;
+			margin:10px;
+			cursor:pointer;
+		}
+		.clearfix{*zoom:1;}
+		.clearfix:after{content:""; display:block; height:0; visibility:hidden; clear:both;}
 	</style>
 </head>
 <body>
 	<div class="drag-wrapper">
-		<ul class="drag-list">
-			<li>1</li>
+		<ul class="drag-list clearfix">
+			<li><div>1111111</div></li>
 			<li>2</li>
 			<li>3</li>
 			<li>4</li>
@@ -37,9 +47,16 @@
 	(function($){
 		$.fn.dragsort = function(options){
 			//
+			this.each(function(){
+				this.ul = $(this).children('.drag-list');
+				this.ul.bind('click',function(event){
+					if(this == event.target) return;
+				});
+			});
 		};
 		$.fn.dragsort.defaults = {};
 	})(jQuery);
+	$('.drag-wrapper').dragsort();
 	</script>
 </body>
 </html>
