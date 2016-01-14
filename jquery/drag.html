@@ -45,13 +45,16 @@
 	<script type="text/javascript" src="jquery.js"></script>
 	<script type="text/javascript">
 	(function($){
+		var Dragsort = (function(){
+			function Dragsort(element,settings){
+				this.settings = $.extend(true, $.fn.dragsort.defaults, settings||{});
+				this.element = element;
+			}
+		})();
 		$.fn.dragsort = function(options){
-			//
-			this.each(function(){
-				this.ul = $(this).children('.drag-list');
-				this.ul.bind('click',function(event){
-					if(this == event.target) return;
-				});
+			return this.each(function(){
+				var self = this;
+				var instance = new Dragsort();
 			});
 		};
 		$.fn.dragsort.defaults = {};
