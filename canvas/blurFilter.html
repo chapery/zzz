@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>imageData</title>
+	<title>blurFilter</title>
 </head>
 <body>
 <canvas id="canvas1" width="600" height='400' style="border:2px solid silver;"></canvas>
@@ -15,7 +15,7 @@
 	var w = canvas1.width;
 	var h = canvas1.height;
 	var img = new Image();
-	img.src = 'images/pic.jpg';
+	img.src = '../images/pic.jpg';
 	img.onload = function(){
 		ctx1.drawImage(img,0,0,w,h);
 		var imgData = ctx1.getImageData(0,0,w,h);
