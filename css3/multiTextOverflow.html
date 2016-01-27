@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>multiTextOverflow</title>
+	<style>
+		.box{
+			width:200px;
+			border:1px solid gray;
+			display:box;
+			display:-webkit-box;
+			-webkit-box-orient:vertical;
+			-webkit-line-clamp:2;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			word-break:break-all;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">display:box; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow: hidden; text-overflow:ellipsis; word-break:break-all;</div>
+</body>
+</html>
