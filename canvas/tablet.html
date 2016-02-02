@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tablet</title>
+	<style>
+		#mycanvas{background-color: #eee;}
+	</style>
+</head>
+<body>
+	<canvas id="mycanvas"></canvas>
+	<script>
+		var canvas = document.getElementById('mycanvas');
+		var ctx = canvas.getContext('2d');
+		canvas.width = 400;
+		canvas.height = 400;
+		grid();
+		function grid(){
+			ctx.save();
+			ctx.strokeStyle = 'red';
+			ctx.lineWidth = 4;
+			ctx.strokeRect(2,2,canvas.width-4,canvas.height-4);
+
+			ctx.lineWidth = 2;
+			ctx.moveTo(0,0);
+			ctx.lineTo(canvas.width,canvas.height);
+			ctx.moveTo(canvas.width,0);
+			ctx.lineTo(0,canvas.height);
+			ctx.moveTo(canvas.width/2,0);
+			ctx.lineTo(canvas.width/2,canvas.height);
+			ctx.moveTo(0,canvas.height/2);
+			ctx.lineTo(canvas.width,canvas.height/2)
+			ctx.stroke();
+			console.dir(ctx);
+		}
+	</script>
+</body>
+</html>
