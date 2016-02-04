@@ -2,26 +2,47 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<title>tablet</title>
 	<style>
-		#mycanvas{background-color: #eee;}
+		html,body,canvas{margin:0; padding:0;}
+		#mycanvas{background-color: #eee; margin-top: 50px;}
 	</style>
 </head>
-<body>
+<body style="height:1000px;">
 	<canvas id="mycanvas"></canvas>
 	<script>
 		var canvas = document.getElementById('mycanvas');
 		var ctx = canvas.getContext('2d');
-		canvas.width = 400;
-		canvas.height = 400;
-		grid();
+		canvas.width = window.innerWidth>1000 ? 600 : window.innerWidth;
+		canvas.height = canvas.width;
+
+		var dashList = [4,6];
+		var writable = false;
+		var lastPos = {};
+		var lastTime;
+		init();
+		function init(){
+			grid();
+			canvas.addEventListener('touchstart',mousedownHandle);
+			canvas.addEventListener('touchmove',mousemoveHandle);
+			canvas.addEventListener('touchend',mouseupHandle);
+			if(canvas.)
+
+			canvas.addEventListener('mousedown',mousedownHandle);
+			canvas.addEventListener('mousemove',mousemoveHandle);
+			canvas.addEventListener('mouseup',mouseupHandle);
+			canvas.addEventListener('mouseout',mouseoutHandle);
+
+		};
 		function grid(){
 			ctx.save();
 			ctx.strokeStyle = 'red';
 			ctx.lineWidth = 4;
 			ctx.strokeRect(2,2,canvas.width-4,canvas.height-4);
 
-			ctx.lineWidth = 2;
+			ctx.lineWidth = 1;
+			ctx.setLineDash(dashList);
 			ctx.moveTo(0,0);
 			ctx.lineTo(canvas.width,canvas.height);
 			ctx.moveTo(canvas.width,0);
@@ -31,8 +52,48 @@
 			ctx.moveTo(0,canvas.height/2);
 			ctx.lineTo(canvas.width,canvas.height/2)
 			ctx.stroke();
-			console.dir(ctx);
+			ctx.restore();
 		}
+		function mousedownHandle(e){
+			writable = true;
+			lastPos.x = e.touches ? e.touches[0].clientX : e.clientX - canvas.getBoundingClientRect().left;
+			lastPos.y = e.touches ? e.touches[0].clientY : e.clientY - canvas.getBoundingClientRect().top;
+			lastTime = (new Date()).getTime();
+			console.log(e);
+		};
+		function mousemoveHandle(e){
+			e.preventDefault();
+			if(!writable) return;
+			var curPos = {};
+			var curTime;
+			curPos.x = e.touches ? e.touches[0].clientX : e.clientX - canvas.getBoundingClientRect().left;
+			curPos.y = e.touches ? e.touches[0].clientY : e.clientY - canvas.getBoundingClientRect().top;
+			curTime = (new Date()).getTime();
+			drawPiece(lastPos, curPos, lastTime, curTime);
+			lastPos = curPos;
+			lastTime = curTime;
+		};
+		function mouseupHandle(e){
+			writable = false;
+		};
+		function mouseoutHandle(e){
+			writable = false;
+		};
+		function drawPiece(posstart,posend,timestart,timeend){
+			var distance = Math.sqrt(Math.pow(posend.x-posstart.x,2) + Math.pow(posend.y-posstart.y,2));
+			var v = distance/(timeend - timestart);
+			if(v<=0.1){v = 0.1}else if(v>=1){v=1};
+			ctx.save();
+			ctx.lineWidth = Math.round(10+1/v);
+			ctx.lineCap = 'round';
+			ctx.lineCorner = 'round';
+			ctx.strokeStyle = "black";
+			ctx.beginPath();
+			ctx.lineTo(posstart.x,posstart.y);
+			ctx.lineTo(posend.x,posend.y);
+			ctx.stroke();
+			ctx.restore();
+		};
 	</script>
 </body>
 </html>
