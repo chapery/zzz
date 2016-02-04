@@ -5,34 +5,76 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<title>tablet</title>
 	<style>
-		html,body,canvas{margin:0; padding:0;}
-		#mycanvas{background-color: #eee; margin-top: 50px;}
+		html,body,canvas,label,i,div,button{margin:0; padding:0;}
+		.main{width:1000px; margin:0px auto; text-align: center;}
+		#mycanvas{background-color: #eee; vertical-align: middle;}
+		.scrollMask{height:60px; width:100%; overflow: hidden; margin-top: 10px;}
+		.controller{width:100%; padding-bottom: 20px; overflow:auto;}
+		.strokeStyle{display:inline-block;}
+		.strokeStyle input{display:none;}
+		.strokeStyle input + i{display:inline-block; width: 50px; height: 50px; line-height: 50px; text-align: center; border:5px solid transparent; text-shadow:0px 0px 1px white, 0px 0px 1px white, 0px 0px 1px white;}
+		.strokeStyle input:checked + i{border-color:black;}
+		.resetBtn{height:50px; padding:0px 20px; margin-top: 10px; font-size:20px; background-color: lime; outline:none; border:none; color:white;}
+		.resetBtn:active{background-color: limeGreen;}
+		@media screen and (max-width:1000px){
+			.main{width:auto;}
+			.controller{display:box; display:-webkit-box; display:-moz-box;}
+			.strokeStyle{display:block; box-flex:1;}
+			.resetBtn{width:100%;}
+		}
 	</style>
 </head>
-<body style="height:1000px;">
-	<canvas id="mycanvas"></canvas>
+<body>
+	<div class="main">
+		<canvas id="mycanvas"></canvas>
+		<div class="scrollMask">
+			<div id="controller" class="controller">
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:red;">red</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:orange;">orange</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:yellow;">yellow</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:green;">green</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:cyan;">cyan</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:blue;">blue</i></label>
+				<label class="strokeStyle"><input type="radio" name="r1"><i style="background-color:purple;">purple</i></label>
+			</div>
+		</div>
+		<button id="resetBtn" class="resetBtn">reset</button>
+	</div>
 	<script>
 		var canvas = document.getElementById('mycanvas');
 		var ctx = canvas.getContext('2d');
 		canvas.width = window.innerWidth>1000 ? 600 : window.innerWidth;
 		canvas.height = canvas.width;
 
+		var controller = document.getElementById('controller');
+		var resetBtn = document.getElementById('resetBtn');
+
 		var dashList = [4,6];
 		var writable = false;
 		var lastPos = {};
 		var lastTime;
+		var strokeStyle = 'black';
+		
 		init();
+		controller.addEventListener('change',function(e){
+			strokeStyle = e.target.nextElementSibling.style.backgroundColor;
+		});
+		resetBtn.addEventListener('click',function(){
+			ctx.save();
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+			ctx.restore();
+			grid();
+		});
 		function init(){
 			grid();
-			canvas.addEventListener('touchstart',mousedownHandle);
-			canvas.addEventListener('touchmove',mousemoveHandle);
-			canvas.addEventListener('touchend',mouseupHandle);
-			// if(canvas.)
-
 			canvas.addEventListener('mousedown',mousedownHandle);
 			canvas.addEventListener('mousemove',mousemoveHandle);
 			canvas.addEventListener('mouseup',mouseupHandle);
 			canvas.addEventListener('mouseout',mouseoutHandle);
+
+			canvas.addEventListener('touchstart',mousedownHandle);
+			canvas.addEventListener('touchmove',mousemoveHandle);
+			canvas.addEventListener('touchend',mouseupHandle);
 
 		};
 		function grid(){
@@ -56,18 +98,17 @@
 		}
 		function mousedownHandle(e){
 			writable = true;
-			lastPos.x = e.touches ? e.touches[0].clientX : e.clientX - canvas.getBoundingClientRect().left;
-			lastPos.y = e.touches ? e.touches[0].clientY : e.clientY - canvas.getBoundingClientRect().top;
+			lastPos.x = (e.touches ? e.touches[0].clientX : e.clientX) - canvas.getBoundingClientRect().left;
+			lastPos.y = (e.touches ? e.touches[0].clientY : e.clientY) - canvas.getBoundingClientRect().top;
 			lastTime = (new Date()).getTime();
-			console.log(e);
 		};
 		function mousemoveHandle(e){
 			e.preventDefault();
 			if(!writable) return;
 			var curPos = {};
 			var curTime;
-			curPos.x = e.touches ? e.touches[0].clientX : e.clientX - canvas.getBoundingClientRect().left;
-			curPos.y = e.touches ? e.touches[0].clientY : e.clientY - canvas.getBoundingClientRect().top;
+			curPos.x = (e.touches ? e.touches[0].clientX : e.clientX) - canvas.getBoundingClientRect().left;
+			curPos.y = (e.touches ? e.touches[0].clientY : e.clientY) - canvas.getBoundingClientRect().top;
 			curTime = (new Date()).getTime();
 			drawPiece(lastPos, curPos, lastTime, curTime);
 			lastPos = curPos;
@@ -87,7 +128,7 @@
 			ctx.lineWidth = Math.round(10+1/v);
 			ctx.lineCap = 'round';
 			ctx.lineCorner = 'round';
-			ctx.strokeStyle = "black";
+			ctx.strokeStyle = strokeStyle;
 			ctx.beginPath();
 			ctx.lineTo(posstart.x,posstart.y);
 			ctx.lineTo(posend.x,posend.y);
