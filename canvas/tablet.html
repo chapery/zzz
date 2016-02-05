@@ -85,6 +85,7 @@
 
 			ctx.lineWidth = 1;
 			ctx.setLineDash(dashList);
+			ctx.beginPath();
 			ctx.moveTo(0,0);
 			ctx.lineTo(canvas.width,canvas.height);
 			ctx.moveTo(canvas.width,0);
@@ -94,6 +95,7 @@
 			ctx.moveTo(0,canvas.height/2);
 			ctx.lineTo(canvas.width,canvas.height/2)
 			ctx.stroke();
+			ctx.closePath();
 			ctx.restore();
 		}
 		function mousedownHandle(e){
@@ -133,6 +135,7 @@
 			ctx.lineTo(posstart.x,posstart.y);
 			ctx.lineTo(posend.x,posend.y);
 			ctx.stroke();
+			ctx.closePath();
 			ctx.restore();
 		};
 	</script>
