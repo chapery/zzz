@@ -1,9 +1,13 @@
-div { margin: 0; }
-
-div { padding: 0; }
-
-body, div { margin: 0px; padding: 0px; }
-
-div { border: 1px solid #f00; }
+.mydiv {
+  background-color: red;
+  border-top: 2px solid green;
+  border-bottom: 3px solid blue;
+}
+.mydiv:before {
+  content: "before";
+}
+.mydiv:after {
+  content: "after";
+}
 
 /*# sourceMappingURL=test.css.map */

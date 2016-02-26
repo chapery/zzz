@@ -1,14 +1,12 @@
-div {
-  margin: 0; }
-
-div {
-  padding: 0; }
-
-body, div {
-  margin: 0px;
-  padding: 0px; }
-
 .mydiv {
-  background-color: green; }
+  background-color: red;
+  border-top: 2px solid green;
+  border-bottom: 3px solid blue; }
+  .mydiv:before {
+    content: "before";
+    color: green; }
+  .mydiv:after {
+    content: "after";
+    color: green; }
 
 /*# sourceMappingURL=test.css.map */
