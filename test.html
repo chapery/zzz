@@ -5,10 +5,10 @@
 	<title>test</title>
 	<style>
 		.custom-scrollbar-wrap{width:300px; height:400px; border:1px solid gray; padding-right: 20px; position: relative; overflow: hidden;}
-		.custom-scrollbar-wrap .custom-scrollbar-con{height:1000px; position: relative; background-color:red;}
+		.custom-scrollbar-wrap .custom-scrollbar-con{position: relative; background-color:red; font-size: 20px;}
 		.custom-scrollbar-wrap .custom-scrollbar-bg{width:20px; height:100%; position: absolute; right:0px; top:0px;}
 		.custom-scrollbar-wrap .custom-scrollbar-area{ background-color: silver; width:100%; height:100%; margin:0px auto;}
-		.custom-scrollbar-wrap .custom-scrollbar-dragger{width:100%; height: 50px; border-radius: 10px; background-color: green;}
+		.custom-scrollbar-wrap .custom-scrollbar-dragger{width:100%; border-radius: 10px; background-color: green; position: relative;}
 	</style>
 </head>
 <body>
@@ -28,36 +28,46 @@
 			self.H = $(this).height();
 			self.conH = self.content.outerHeight();
 			self.areaH = self.area.height();
+			self.draggerH = self.dragger.height();
 			self.pace = 30;
-
 			self.radio = self.H/self.conH;
 
-			$(this).bind('mousewheel',mousewheelHandle);
-			this.area.bind('click',clickHandle);
-			this.dragger.bind('mousedown',mousedownHandle);
-			this.dragger.bind('mousemove',mousemoveHandle);
-			this.dragger.bind('mouseup',mouseupHandle);
+			if(self.conH <= self.H) return;
+
+			initScrollbar();
+			$(this).bind('mousewheel DOMMouseScroll',mousewheelHandle);
+			self.area.bind('click',clickHandle);
+			self.dragger.bind('mousedown',mousedownHandle);
+			self.dragger.bind('mousemove',mousemoveHandle);
+			self.dragger.bind('mouseup',mouseupHandle);
 
 			function initScrollbar(){
-				self.area.height(self.areaH*self.radio);
+				self.dragger.height(self.areaH*self.radio);
+				self.draggerH = self.dragger.height();
 			}
 
 			function mousewheelHandle(e){
 				e.preventDefault();
-				var delta = e.originalEvent.wheelDelta;
-				var top = parseInt(self.content.css('top')) || 0;
+				var delta = e.originalEvent.wheelDelta || -e.originalEvent.detail;
+				var contop = parseInt(self.content.css('top')) || 0;
+				var contop_min = self.H-self.conH;
+				var draggertop = parseInt(self.dragger.css('top')) || 0;
+				var draggertop_max = self.areaH-self.draggerH;
 				if(delta>0){
-					if(top >= -self.pace){
+					if(contop >= -self.pace){
 						self.content.css('top',0);
+						self.dragger.css('top',0);
 					}else{
-						self.content.css('top',top+self.pace);
+						self.content.css('top',contop+self.pace);
+						self.dragger.css('top',draggertop-self.pace/(-contop_min)*draggertop_max);
 					}
 				}else if(delta<0){
-					var max=self.H-self.conH;
-					if(top <= max+self.pace){
-						self.content.css('top',max);
+					if(contop <= contop_min+self.pace){
+						self.content.css('top',contop_min);
+						self.dragger.css('top',draggertop_max);
 					}else{
-						self.content.css('top',top-self.pace);
+						self.content.css('top',contop-self.pace);
+						self.dragger.css('top',draggertop+self.pace/(-contop_min)*draggertop_max);
 					}
 				}
 			}
