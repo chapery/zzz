@@ -4,8 +4,8 @@
 	<meta charset="UTF-8">
 	<title>test</title>
 	<style>
-		.custom-scrollbar-wrap{width:300px; height:400px; border:1px solid gray; padding-right: 20px; position: relative; overflow: ;}
-		.custom-scrollbar-wrap .custom-scrollbar-con{position: relative; background-color:red; font-size: 20px; height:1000px;}
+		.custom-scrollbar-wrap{width:300px; height:400px; border:1px solid gray; padding-right: 20px; position: relative; overflow:;}
+		.custom-scrollbar-wrap .custom-scrollbar-con{position: relative; background-color:red; font-size: 20px; height:500px;}
 		.custom-scrollbar-wrap .custom-scrollbar-bg{width:20px; height:100%; position: absolute; right:0px; top:0px;}
 		.custom-scrollbar-wrap .custom-scrollbar-area{ background-color: silver; width:100%; height:100%; margin:0px auto;}
 		.custom-scrollbar-wrap .custom-scrollbar-dragger{width:100%; border-radius: 10px; background-color: green; position: relative;}
@@ -54,13 +54,15 @@
 				var delta = e.originalEvent.wheelDelta || -e.originalEvent.detail;
 				var contop = parseInt(self.content.css('top')) || 0;
 				var draggertop = parseInt(self.dragger.css('top')) || 0;
+				var draggerpace = Math.floor(self.pace/(-self.conTopMin)*self.draggerTopMax*10)/10;
+				console.log(draggerpace);
 				if(delta>0){
 					if(contop >= -self.pace){
 						self.content.css('top',0);
 						self.dragger.css('top',0);
 					}else{
 						self.content.css('top',contop+self.pace);
-						self.dragger.css('top',draggertop-self.pace/(-self.conTopMin)*self.draggerTopMax);
+						self.dragger.css('top',draggertop-draggerpace);
 					}
 				}else if(delta<0){
 					if(contop <= self.conTopMin+self.pace){
@@ -68,25 +70,30 @@
 						self.dragger.css('top',self.draggerTopMax);
 					}else{
 						self.content.css('top',contop-self.pace);
-						self.dragger.css('top',draggertop+self.pace/(-self.conTopMin)*self.draggerTopMax);
+						self.dragger.css('top',draggertop+draggerpace);
 					}
 				}
 			}
-			function clickHandle(e){console.log(e.offsetY);
+			function clickHandle(e){
 				if(e.target == self.area[0]){
 					var contop = parseInt(self.content.css('top')) || 0;
 					var draggertop = parseInt(self.dragger.css('top')) || 0;
+					var conpace = self.draggerH/self.draggerTopMax*self.conTopMin;
 					if(e.offsetY <= draggertop){
 						if(draggertop <=self.draggerH){
 							self.dragger.css('top',0);
+							self.content.css('top',0);
 						}else{
 							self.dragger.css('top',draggertop - self.draggerH);
+							self.content.css('top',contop-conpace);
 						};
 					}else if(e.offsetY >= draggertop+self.draggerH){
 						if(draggertop+self.draggerH >= self.areaH-self.draggerH){
 							self.dragger.css('top',self.areaH-self.draggerH);
+							self.content.css('top',self.conTopMin);
 						}else{
 							self.dragger.css('top',draggertop + self.draggerH);
+							self.content.css('top',contop+conpace);
 						};
 					}
 				}
