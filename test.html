@@ -77,7 +77,7 @@
 				if(e.target == self.area[0]){
 					var conpace = self.draggerH/self.draggerTopMax*self.conTopMin;
 					if(e.offsetY <= self.draggerTop){
-						if(self.draggerTop <=self.draggerH){
+						if(self.draggerTop <= self.draggerH){
 							self.draggerTop = 0;
 							self.conTop = 0;
 						}else{
@@ -100,10 +100,11 @@
 			function mousedownHandle(e){
 				self.draggable = true;
 				self.draggerLastY = e.pageY;
-				$(document).bind({
+				$(document.body).bind({
 					mousemove:domMousemoveHandle,
 					mouseup:domMouseupHandle
 				});
+				document.body.onselectstart = function(){return false;};
 			}
 			function domMousemoveHandle(e){
 				
@@ -131,8 +132,9 @@
 			};
 			function domMouseupHandle(e){
 				self.draggable = false;
-				$(document).unbind('mousemove',domMousemoveHandle);
-				$(document).unbind('mouseup',domMouseupHandle);
+				$(document.body).unbind('mousemove',domMousemoveHandle);
+				$(document.body).unbind('mouseup',domMouseupHandle);
+				// document.documentElement.onselectstart = function(){return true;};
 			};
 		}
 		$('#scrollbar').customScrollbar();
