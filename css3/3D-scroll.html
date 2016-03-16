@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>3D-scroll</title>
+	<style>
+		html,body,div,img{
+			margin:0;
+			padding:0;
+			border:0px none;
+			outline: 0px none;
+		}
+		html,body{
+			width:100%;
+			height:100%;
+		}
+		.box{
+			width:100%;
+			height:100%;
+			perspective:1000;
+			-webit-perspective:1000;
+		}
+		.item{
+			width:100%;
+			height:100%;
+			text-align:center;
+		}
+		.item img{
+			width:100%;
+			height:100%;
+		}
+		.item:nth-child(1){}
+		.item:nth-child(2){
+			transform:rotateX(80deg);
+			transform-origin:top left;
+			transform-style:preserve-3d;
+			-webit-transform-style:preserve-3d;
+		}
+		.item:nth-child(3){}
+		.item:nth-child(4){}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="item"><img src="../images/pic.jpg"></div>
+		<div class="item"><img src="../images/borderImg.png"></div>
+		<div class="item"><img src="../images/texture.jpg"></div>
+		<div class="item"><img src="../images/texture_1.jpg"></div>
+	</div>
+	<script>
+		//
+	</script>
+</body>
+</html>
