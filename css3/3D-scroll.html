@@ -14,41 +14,95 @@
 			width:100%;
 			height:100%;
 		}
+		body{overflow:hidden;}
+		.wrapper{
+			width:100%;
+			height:100%;
+			position: relative;
+			perspective:1000px;
+			-webit-perspective:1000px;
+			-moz-perspective:1000px;
+			
+		}
 		.box{
 			width:100%;
 			height:100%;
-			perspective:1000;
-			-webit-perspective:1000;
+			transition-duration: 500ms;
+
+			transform-style:preserve-3d;
+			-webit-transform-style:preserve-3d;
+			-moz-transform-style:preserve-3d;
 		}
 		.item{
 			width:100%;
 			height:100%;
 			text-align:center;
+			position: absolute;
+			left:0;
+			top:0;
 		}
 		.item img{
 			width:100%;
 			height:100%;
 		}
-		.item:nth-child(1){}
-		.item:nth-child(2){
-			transform:rotateX(80deg);
-			transform-origin:top left;
-			transform-style:preserve-3d;
-			-webit-transform-style:preserve-3d;
-		}
-		.item:nth-child(3){}
-		.item:nth-child(4){}
 	</style>
 </head>
 <body>
-	<div class="box">
-		<div class="item"><img src="../images/pic.jpg"></div>
-		<div class="item"><img src="../images/borderImg.png"></div>
-		<div class="item"><img src="../images/texture.jpg"></div>
-		<div class="item"><img src="../images/texture_1.jpg"></div>
+	<div id="wrapper" class="wrapper">
+		<div class="box">
+			<div class="item"><img src="../images/pic.jpg"></div>
+			<div class="item"><img src="../images/borderImg.png"></div>
+			<div class="item"><img src="../images/texture.jpg"></div>
+			<div class="item"><img src="../images/texture_1.jpg"></div>
+		</div>
 	</div>
 	<script>
-		//
+		(function(){
+			function Scroll3d(wrapper,box,items){
+				var self = this;
+				try{
+					this.wrapper = document.querySelector(wrapper);
+					this.box = this.wrapper.querySelector(box);
+					this.items = this.box.querySelectorAll(items);
+				}catch(err){
+					console.log('结构不完整或传入的参数有误！');
+					return;
+				};
+				this.h = this.box.offsetHeight;
+				this.r = 0;
+				this.angle = 90;
+				this.flag = true;
+
+				self.box.style.transformOrigin = '50% 50% ' + -self.h/2 + 'px';
+				for(var i=0; i<self.items.length; i++){
+					with(self.items[i].style){
+						transformOrigin = '50% 50% ' + -self.h/2 + 'px';
+						height = self.h + 'px';
+						transform = 'rotateX('+ -self.angle*i + 'deg)';
+					};
+				};
+
+				if(typeof window.onmousewheel !== 'undefined'){
+					self.wrapper.addEventListener('mousewheel',mousewheelhandle,false);
+				}else{
+					self.wrapper.addEventListener('DOMMouseScroll',mousewheelhandle,false);
+				};
+				self.wrapper.addEventListener('transitionend',transitionendhandle,false);
+				function mousewheelhandle(e){
+					if(self.flag){
+						self.flag = false;
+						var dir = e.wheelDelta || -e.detail;
+						if(dir < 0){self.r+=self.angle;}else{self.r-=self.angle;}
+						self.box.style.transform = 'rotateX('+ self.r + 'deg)';
+					};
+				};
+				function transitionendhandle(){
+					self.flag = true;
+				};
+			};
+			window['Scroll3d'] = Scroll3d;
+		})();
+		new Scroll3d('#wrapper','.box','.item');
 	</script>
 </body>
 </html>
