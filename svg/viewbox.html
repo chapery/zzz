@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>viewbox</title>
+	<style>
+		html,body,div,form{margin: 0; padding: 0;}
+		.box{
+			display:flex;
+			width:100%;
+		}
+		.left{
+			flex-grow:1;
+		}
+		.right{
+			width:200px;
+		}
+		.lab{
+			display:inline-block;
+			width:50px;
+			padding-right: 5px;
+			text-align: right;
+		}
+		.inpNum{
+			width:100px;
+		}
+		.svg{
+			width:500px;
+			height:500px;
+			background:lightgreen;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="left">
+			<svg class="svg" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="100 100 1000 500">
+				<rect width="200" height="200" x="100" y="100" fill="gray"></rect>
+			</svg>
+		</div>
+		<div class="right">
+			<form id="form" action="">
+				<fieldset>
+					<legend>viewbox</legend>
+					<label for="vx" class="lab">x:</label><input id="vx" class="inpNum" type="number"><br/>
+					<label for="vy" class="lab">y:</label><input id="vy" class="inpNum" type="number"><br/>
+					<label for="vw" class="lab">vw:</label><input id="vw" class="inpNum" type="number"><br/>
+					<label for="vh" class="lab">vh:</label><input id="vh" class="inpNum" type="number">
+				</fieldset>
+				<fieldset>
+					<legend>preserveAspectRatio</legend>
+					<label for="align" class="lab">align:</label><select id="align">
+						<option value="none">none</option>
+						<option value="xMinYMin">xMinYMin</option>
+						<option value="xMidYMin">xMidYMin</option>
+						<option value="xMaxYMin">xMaxYMin</option>
+						<option value="xMinYMid">xMinYMid</option>
+						<option value="xMidYMid" selected="selected">xMidYMid</option>
+						<option value="xMaxYMid">xMaxYMid</option>
+						<option value="xMinYMax">xMinYMax</option>
+						<option value="xMidYMax">xMidYMax</option>
+						<option value="xMaxYMax">xMaxYMax</option>
+					</select><br/>
+					<label for="align" class="lab">meetOrSlice:</label><select id="">
+						<option value="meet" selected="selected">meet</option>
+						<option value="slice">slice</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
