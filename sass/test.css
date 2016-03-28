@@ -1,12 +1,6 @@
-.mydiv {
-  background-color: red;
-  border-top: 2px solid green;
-  border-bottom: 3px solid blue; }
-  .mydiv:before {
-    content: "before";
-    color: green; }
-  .mydiv:after {
-    content: "after";
+.mylink {
+  color: red; }
+  .mylink:hover {
     color: green; }
 
 /*# sourceMappingURL=test.css.map */

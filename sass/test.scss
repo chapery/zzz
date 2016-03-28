@@ -1,11 +1,7 @@
-$red: red !default;
-$green: green;
-.mydiv{
-	background-color: $red;
-	border:{
-		top:2px solid green;
-		bottom:3px solid blue;
+$color: red green !default;
+.mylink{
+	color:nth($color,1);
+	&:hover{
+		color:nth($color,2);
 	}
-	&:before{content:"before";}
-	&:after{content:"after";}
 }
