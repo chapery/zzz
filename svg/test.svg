@@ -1,10 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="500" style="background-color:gray;">
-	<rect width="100%" height="100%" x="0" y="0" rx="10" ry="10" style="fill:red; stroke:black; stroke-width:2; opacity:0.5; fill-opacity:0.5; stroke-opacity:0.5;"/>
-	<circle cx="200" cy="50" r="50" style="fill:red;"/>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="800" height="800" style="outline:1px dashed black">
+	<defs>
+		<!-- 线性渐变 -->
+		<linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
+			<stop offset="0" stop-color="red" />
+			<stop offset="0.5" stop-color="green" />
+			<stop offset="1" stop-color="blue" />
+		</linearGradient>
+		<!-- 径向渐变 -->
+		<radialGradient id="rg1" cx="0.5" cy="0.5" r="0.5" fx="0.2" fy="0.2">
+			<stop offset="0" stop-color="red" />
+			<stop offset="0.5" stop-color="green" />
+			<stop offset="1" stop-color="blue" />
+		</radialGradient>
+		<!-- 笔刷 -->
+		<pattern id="p1" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+			<rect x="0" y="0" width="100" height="100" fill="url(#rg1)" />
+		</pattern>
+	</defs>
+	<rect width="100" height="100" x="0" y="0" rx="10" ry="10" style="fill:url(#lg1); stroke:black; stroke-width:2; opacity:0.5; fill-opacity:0.5; stroke-opacity:0.5;"/>
+	<circle cx="200" cy="50" r="50" style="fill:url(#rg1);"/>
 	<ellipse cx="300" cy="50" rx="50" ry="30" style="fill:red;"/>
 	<line x1="350" y1="50" x2="450" y2="50" style="stroke:black; stroke-width:2;"/>
 	<g transform="translate(0,100)">
 		<polygon points="450,50 500,0 550,50" style="stroke:red; stroke-width:2;"/>
 		<polyline points="550,50 600,25 600,75 650,50" style="stroke:black; stroke-width:2; fill:transparent;"/>
 	</g>
+	<rect width="400" height="400" x="0" y="200" fill="url(#p1)" stroke="red" stroke-width="2" />
 </svg>
