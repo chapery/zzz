@@ -14,15 +14,38 @@
 	<script>
 		txt.focus();
 		var path = document.getElementById('path');
+		var selection,start,end;
+		var keyActive = false;
 		txt.addEventListener('input',function(){
 			try{
 				path.setAttribute('d',this.value);
 			}catch(err){
-				console.log(111);
+				alert(err);
 			};
 		},false);
-		txt.addEventListener('select',function(e){
-		},false);
+		txt.addEventListener('select',selectHandler,false);
+		txt.addEventListener('keydown',keydownHandler,false);
+		function selectHandler(e){
+			start = this.selectionStart;
+			end = this.selectionEnd;
+			selection = this.value.substring(start,end);
+			if(selection.search(/\D/) == -1){
+				keyActive = true;
+			}else{
+				keyActive = false;
+			};console.log(selection);
+		};
+		function keydownHandler(e){
+			if(keyActive){
+				if(e.keyCode == 38 || e.keyCode == 40){
+					var isAdd = e.keyCode == 38 ? 1 : -1;
+					e.preventDefault();
+					txt.value = txt.value.replace(selection,parseInt(selection)+isAdd);
+					selection = parseInt(selection)+isAdd;
+					txt.setSelectionRange(start,start+selection.toString().length);
+				};
+			};
+		}
 	</script>
 </body>
 </html>
