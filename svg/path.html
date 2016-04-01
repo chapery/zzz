@@ -3,6 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>path</title>
+	<style>
+		html,body{width:100%; height:100;}
+		body{overflow:hidden;}
+	</style>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg" width="100%" height="100%">
@@ -16,33 +20,37 @@
 		var path = document.getElementById('path');
 		var selection,start,end;
 		var keyActive = false;
-		txt.addEventListener('input',function(){
+		txt.addEventListener('input',inputHandler,false);
+		txt.addEventListener('select',selectHandler,false);
+		txt.addEventListener('keydown',keydownHandler,false);
+		function inputHandler(e){
 			try{
-				path.setAttribute('d',this.value);
+				path.setAttribute('d',txt.value);
 			}catch(err){
 				alert(err);
 			};
-		},false);
-		txt.addEventListener('select',selectHandler,false);
-		txt.addEventListener('keydown',keydownHandler,false);
+		};
 		function selectHandler(e){
 			start = this.selectionStart;
 			end = this.selectionEnd;
 			selection = this.value.substring(start,end);
-			if(selection.search(/\D/) == -1){
+			if(selection.search(/\D/) == -1 && start != end){
 				keyActive = true;
 			}else{
 				keyActive = false;
-			};console.log(selection);
+			};
+			console.log(1)
 		};
 		function keydownHandler(e){
 			if(keyActive){
 				if(e.keyCode == 38 || e.keyCode == 40){
 					var isAdd = e.keyCode == 38 ? 1 : -1;
+					var 
 					e.preventDefault();
 					txt.value = txt.value.replace(selection,parseInt(selection)+isAdd);
 					selection = parseInt(selection)+isAdd;
 					txt.setSelectionRange(start,start+selection.toString().length);
+					inputHandler();
 				};
 			};
 		}
