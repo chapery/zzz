@@ -39,15 +39,13 @@
 			}else{
 				keyActive = false;
 			};
-			console.log(1)
 		};
 		function keydownHandler(e){
 			if(keyActive){
 				if(e.keyCode == 38 || e.keyCode == 40){
 					var isAdd = e.keyCode == 38 ? 1 : -1;
-					var 
 					e.preventDefault();
-					txt.value = txt.value.replace(selection,parseInt(selection)+isAdd);
+					txt.value = txt.value.substring(0,start)+(parseInt(selection)+isAdd)+txt.value.substring(end);
 					selection = parseInt(selection)+isAdd;
 					txt.setSelectionRange(start,start+selection.toString().length);
 					inputHandler();
