@@ -14,7 +14,7 @@
 		<path id="path" stroke="limeGreen" stroke-width="2" fill="transparent" d="" />
 	</svg>
 	<form action="">
-		<textarea id="txt" style="font-size:16px; position:absolute; bottom:0; left:0; width:100%; box-sizing:border-box;" cols="30" rows="10"></textarea>
+		<textarea id="txt" value="M 100 200 A 100 50 0 1 1 200 250" style="font-size:16px; position:absolute; bottom:0; left:0; width:100%; box-sizing:border-box;" cols="30" rows="10"></textarea>
 	</form>
 	<script>
 		txt.focus();
@@ -24,6 +24,8 @@
 		txt.addEventListener('input',inputHandler,false);
 		txt.addEventListener('select',selectHandler,false);
 		txt.addEventListener('keydown',keydownHandler,false);
+
+		inputHandler();
 		function inputHandler(e){
 			try{
 				path.setAttribute('d',txt.value);
@@ -35,7 +37,7 @@
 			start = this.selectionStart;
 			end = this.selectionEnd;
 			selection = this.value.substring(start,end);
-			if(selection.search(/\D/) == -1 && start != end){
+			if(selection.search(/[^\d-]/) == -1 && start != end){
 				keyActive = true;
 			}else{
 				keyActive = false;
@@ -46,8 +48,10 @@
 				if(e.keyCode == 38 || e.keyCode == 40){
 					var isAdd = e.keyCode == 38 ? 1 : -1;
 					e.preventDefault();
-					txt.value = txt.value.substring(0,start)+(parseInt(selection)+isAdd)+txt.value.substring(end);
-					selection = parseInt(selection)+isAdd;
+					selection = Number(selection);
+					if(/\d/.test(txt.value.charAt(start-1)) && selection == 0 && isAdd == -1){return;}
+					selection += isAdd;
+					txt.value = txt.value.substring(0,start)+selection+txt.value.substring(end);
 					txt.setSelectionRange(start,start+selection.toString().length);
 					inputHandler();
 				};
