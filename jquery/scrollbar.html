@@ -112,8 +112,6 @@
 					mousemove:domMousemoveHandle,
 					mouseup:domMouseupHandle
 				});
-				//阻止鼠标拖动时选中文字
-				document.body.onselectstart = function(){return false;};
 				return false;
 			}
 			function domMousemoveHandle(e){
@@ -150,7 +148,6 @@
 				self.draggable = false;
 				$(document).unbind('mousemove',domMousemoveHandle);
 				$(document).unbind('mouseup',domMouseupHandle);
-				document.body.onselectstart = function(){return true;};
 				return true;
 			};
 		}
