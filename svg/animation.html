@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>animation</title>
+</head>
+<body>
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="400">
+		<defs>
+			<pattern id="p1" width="20" height="20" patternUnits="userSpaceOnUse">
+				<rect width="21" height="21" stroke="gray" stroke-width="1" fill="none"/>
+			</pattern>
+		</defs>
+		<rect width="1000" height="400" fill="url(#p1)"/>
+		<path d="M0,200 h1000" stroke="red"/>
+		<path d="M20,0 v400" stroke="red"/>
+		<text id="txt" x="20" y="210" dx="" dy="" style="font-size:20px; line-height:20px; font-family:Arial;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+	</svg>
+	<script>
+		var txt = document.getElementById('txt');
+		var l = txt.textContent.length;
+		var i = l;
+		var x = [];
+		var y = [];
+		var cy = 0;
+		var w = txt.clientWidth;
+		var s = 2*Math.PI/(w/l);
+		var a = 60;
+		var t = l/8*s;
+		while(i--) x.push(20);
+		y = x.map(function(item,index){
+			var _y = a*Math.sin(s*index-t);
+			cy += a*Math.sin(s*index);
+			return _y;
+		});
+		txt.setAttribute('dx',x);
+		txt.setAttribute('dy',y);
+		console.table(y);
+	</script>
+</body>
+</html>
