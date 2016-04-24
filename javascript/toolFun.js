@@ -116,4 +116,19 @@ function GetRect (ele) {
 	}
 };
 
-
+// 动画帧
+var requestFrame = (function(){
+    var thisFunc;
+    var prefixList = ['webkit','moz','ms'];
+    for(var i=0; i<prefixList.length; i++){
+        thisFunc = prefixList[i] + 'RequestAnimationFrame';
+        if(window[thisFunc]){
+            return function(callback){
+                window[thisFunc](callback);
+            }
+        }
+    };
+    return function(callback){
+        window.setTimeout(callback,67);//15FPS;
+    }
+})();

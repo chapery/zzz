@@ -14,7 +14,7 @@
 		<rect width="1000" height="400" fill="url(#p1)"/>
 		<path d="M0,200 h1000" stroke="red"/>
 		<path d="M20,0 v400" stroke="red"/>
-		<text id="txt" x="20" y="210" dx="" dy="" style="font-size:20px; line-height:20px; font-family:Arial;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+		<text id="txt" x="20" y="200" dx="" dy="" style="font-size:20px; line-height:20px; font-family:Arial;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
 	</svg>
 	<script>
 		var txt = document.getElementById('txt');
@@ -22,20 +22,40 @@
 		var i = l;
 		var x = [];
 		var y = [];
-		var cy = 0;
-		var w = txt.clientWidth;
-		var s = 2*Math.PI/(w/l);
-		var a = 60;
-		var t = l/8*s;
-		while(i--) x.push(20);
-		y = x.map(function(item,index){
-			var _y = a*Math.sin(s*index-t);
-			cy += a*Math.sin(s*index);
-			return _y;
-		});
-		txt.setAttribute('dx',x);
-		txt.setAttribute('dy',y);
-		console.table(y);
+		var w = txt.getBBox().width;
+		var b = 0;
+		while(i--) x.push(10);
+		txt.setAttribute('dx',x.join(' '));
+		render(b);
+		frame();
+		setColor();
+		function render(b){
+			var s = 2*Math.PI/(w/l);
+			var a = 100;
+			var ly = 0;
+			for(i=0; i<l; i++){
+				var _y = a*Math.sin(s*i-b);
+				y[i] = _y - ly;
+				ly = _y;
+			};
+			txt.setAttribute('dy',y.join(' '));
+		};
+		function frame(){
+			render(b+=0.05);
+			requestAnimationFrame(frame);
+		};
+		function setColor(){
+			var NS = 'http://www.w3.org/2000/svg';
+			var innertext = txt.textContent;
+			var angle = Math.round(360/l);
+			txt.textContent = '';
+			for(var i=0; i<l; i++){
+				tspan = document.createElementNS(NS,'tspan');
+				tspan.textContent = innertext.charAt(i);
+				tspan.setAttribute('fill','hsl('+angle*i+',80%,50%)')
+				txt.appendChild(tspan);
+			}
+		}
 	</script>
 </body>
 </html>
