@@ -12,6 +12,11 @@
 			<stop offset="0.5" stop-color="green" />
 			<stop offset="1" stop-color="blue" />
 		</radialGradient>
+		<radialGradient id="rg2" cx="0.5" cy="0.5" r="0.5" fx="0.3" fy="0.3">
+			<stop offset="0" stop-color="#f55" />
+			<stop offset="0.5" stop-color="red" />
+			<stop offset="1" stop-color="darkRed" />
+		</radialGradient>
 		<!-- 笔刷 -->
 		<pattern id="p1" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
 			<rect x="0" y="0" width="100" height="100" fill="url(#rg1)" />
@@ -67,4 +72,9 @@
 			<rect x="0" y="100" width="200" height="100" fill="rgba(255,255,255,0.2)"/>
 		</g>
 	</g>
+	<!-- 动画 -->
+	<circle cx="800" cy="250" r="20" fill="url(#rg2)">
+		<animate attributeType="XML" attributeName="r" from="50" to="100" dur="1s" fill="freeze" repeatCount="indefinite"></animate>
+		<animateTransform attributeType="XML" attributeName="transform" type="rotate" from="0 800 250" to="360 800 250" dur="1" repeatCount="indefinite"></animateTransform>
+	</circle>
 </svg>

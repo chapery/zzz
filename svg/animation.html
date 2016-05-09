@@ -42,7 +42,7 @@
 		};
 		function frame(){
 			render(b+=0.05);
-			requestAnimationFrame(frame);
+			requestAnimationFrame(arguments.callee);
 		};
 		function setColor(){
 			var NS = 'http://www.w3.org/2000/svg';
