@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>vibration</title>
+</head>
+<body>
+	<h1>单击屏幕振动</h1>
+	<script>
+	document.addEventListener('touchend',function(orientData){
+		window.navigator.vibrate(100);//参数为振动时间（毫秒为单位）;若为数组，下标为奇数对应振动，为偶数停止振动;0或空数组停止振动
+	});
+	</script>
+</body>
+</html>

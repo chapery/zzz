@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>orientation</title>
+</head>
+<body>
+	<script>
+	window.addEventListener('deviceorientation',function(orientData){
+		// 以地球的南北方向为x轴、东西方向为y轴、设备的重力方向为z轴
+		// 设备上端指向北边，正面朝上且平行于地面放置时，alpha、beta、gamma都为0
+
+		var alpha = orientData.alpha;//绕z轴的旋转(0~360),指南针指向北边为0度
+		var beta = orientData.beta;//绕x轴的旋转(-180~180)
+		var gamma = orientData.gamma;//y绕z轴的旋转(-180~180)
+		document.write('z：' + alpha + '<br/>');
+		document.write('x：' + beta + '<br/>');
+		document.write('y：' + gamma + '<br/>');
+	});
+	</script>
+</body>
+</html>

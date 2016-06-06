@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<title>geolocation</title>
+</head>
+<body>
+	<script>
+		navigator.geolocation.getCurrentPosition(function(where){
+			document.write('维度：' + where.coords.latitude + '<br/>');//维度
+			document.write('经度：' + where.coords.longitude + '<br/>');//经度
+		},function(){
+			//throw error
+		});
+		/*实时监听*/
+		var geo = navigator.geolocation.watchPosition(function(where){
+			//同上
+		});
+		/*清楚实时监听*/
+		navigator.geolocation.clearWatch(geo);
+	</script>
+</body>
+</html>
