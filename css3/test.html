@@ -3,16 +3,31 @@
 <head>
 	<meta charset="UTF-8">
 	<title>test</title>
+	<style>
+		.col{
+			width:600px;
+			height:auto;
+			border:1px solid gray;
+			text-align: justify;
+			-webkit-column-count:3;
+			column-count:3;
+			-webkit-column-width:100px;
+			column-width:100px;
+			-webkit-column-gap:2em;
+			column-gap:2em;
+			-webkit-column-rule:1px dashed red;
+		}
+		.col h2{
+			-webkit-column-span:all;
+			column-span:all;
+		}
+	</style>
 </head>
 <body>
-	<div id="dragBox" draggable="true" style="width:500px; height:400px; background:red;">
-		<!-- <img style="width:calc(100% - 40px); padding:20px; vertical-align:top;" src="../images/pic.jpg" alt="pic.jpg"> -->
+	<div class="col">
+		<p>还记得创业初期的百度，那时我们主要在跟谷歌等竞争对手抢用户，但我更怕的是它去高价挖我们的人才，谷歌完全有实力给百度的工程师们开出三倍以上的工资待遇来。后来他们进来了，却几乎没有挖动我们什么人。细想起来，那个时候大家都憋着一股气，要做最好的中文搜索引擎。我们每个人每天都为自己做的事情感到特别自豪。那时候我们的招聘海报经常用一个名人的头像，在下面配一句简练的文字。比如用鲁迅的头像，下面配的文字就是：“是翻译，还是用创作寻找中国意义？”用钱学森，文字就是：“是在海外住别墅还是回中国做导弹之父？”用毛泽东，文字就是“是投降，还是比敌人更强”……一直到今天，每当我把这些词句说给后来人听时，都会几近哽咽。在这些梦想的感召下，我们去倾听用户的声音，去了解用户的需求，在实力相差极为悬殊的情况下，一点点地赢得了中国市场。是我们坚守用户至上的价值观为我们赢得了用户，也正是这些用户在贴吧里盖楼、在知道里回答问题、在百科里编写词条，他们创造的内容、贡献的信息，让我们区别于竞争对手，成就了百度的辉煌。</p>
+		<h2>还记得创业初期的百度还记得创业初期的百度</h2>
+		<p>然而今天呢？我更多地会听到不同部门为了KPI分配而争吵不休，会看到一些高级工程师在平衡商业利益和用户体验之间纠结甚至妥协。用户也因此开始质疑我们商业推广的公平性和客观性，吐槽我们产品的安装策略，反对我们贴吧、百科等产品的过度商业化……因为从管理层到员工对短期KPI的追逐，我们的价值观被挤压变形了，业绩增长凌驾于用户体验，简单经营替代了简单可依赖，我们与用户渐行渐远，我们与创业初期坚守的使命和价值观渐行渐远。如果失去了用户的支持，失去了对价值观的坚守，百度离破产就真的只有30天！</p>
 	</div>
-	<script>
-		var dragBox = document.getElementById('dragBox');
-		dragBox.addEventListener('dragover',function(event){
-			event.preventDefault();
-		});
-	</script>
 </body>
 </html>
