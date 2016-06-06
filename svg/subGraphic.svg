@@ -1,0 +1,18 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<style><![CDATA[
+			.icon{display:none;}
+			.icon:target{display:inline;}
+		]]></style>
+	</defs>
+	<svg viewBox="0 0 30 30">
+		<g id="icon1" class="icon"><circle cx="15" cy="15" r="15" fill="green"/></g>
+	</svg>
+	<svg viewBox="0 0 30 30">
+		<g id="icon2" class="icon"><ellipse cx="15" cy="15" rx="15" ry="10" fill="blue"/></g>
+	</svg>
+	<svg viewBox="0 0 30 30">
+		<g id="icon3" class="icon"><rect width="20" height="20" fill="red" fill-opacity="0.5"/></g>
+		<g id="icon3" class="icon"><rect x="50" y="50" width="20" height="20" fill="red" fill-opacity="0.5"/></g>
+	</svg>
+</svg>
