@@ -9,14 +9,12 @@ $color: red green !default;
 		float:left;
 	}
 }
-
 $headings:(h1:2em, h2:1.6em, h3:1.4em);
 @each $header,$size in $headings{
 	#{$header}{
 		font-size:$size;
 	}
 }
-
 @mixin box-shadow($value...){
 	-webkit-box-shadow:$value;
 	-moz-box-shadow:$value;
@@ -26,7 +24,6 @@ $headings:(h1:2em, h2:1.6em, h3:1.4em);
 .mydiv{
 	@include box-shadow(1px 1px 1px blue,2px 2px 2px green);
 }
-
 .mydiv1{
 	@extend .mydiv;
 	background:url(about:blank);
