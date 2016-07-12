@@ -1,0 +1,32 @@
+@import "compass/support";
+@import "compass/layout";
+@import "compass/css3";
+@import "compass/layout/stretching";
+@import "compass/layout/grid-background";
+@import "compass/utilities/color/brightness";
+@import "compass/utilities/general";
+
+@import "icon";
+
+$browser-minimum-versions:("ie":"6");
+
+.mydiv{display:none;color: #000; padding: 0px;}
+.mydiv2{display:none;}
+.mydiv3{display:none;}
+$grid-background-column-color:rgba(255,0,0,1);
+.mydiv4{
+	background-image:image-url('pic.jpg',false,'v=123555');
+}
+
+.clearfix{
+	@include legacy-pie-clearfix();
+}
+
+.float-left{
+	@include float-left;
+}
+
+.layout{
+	@include has-layout(block);
+	@include min-height(10px);
+}

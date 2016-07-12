@@ -1,0 +1,9 @@
+@import "compass/utilities/sprites";
+
+@import "icon/*.png";
+
+$icon: sprite-map("icon/*.png");
+// $iconFile: sprite-file($icon,);
+@include all-icon-sprites();
+
+@debug sprite-names($icon);
