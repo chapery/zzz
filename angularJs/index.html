@@ -2,38 +2,73 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>angularJs</title>
+	<title>angular</title>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular-animate.min.js"></script>
 	<style type="text/css">
-		div{padding: 0px;}
+		.animation{
+			height:100px; background:cyan;
+			transition:all 0.2s linear;
+		}
+		.ng-hide{
+			height:0px;
+			background: transparent;
+		}
 	</style>
 </head>
-<body>
-	<div ng-app="myApp" ng-init="" ng-controller="myController">
-		<my-directive></my-directive>
-		<strong class="myDirective"></strong>
-		<!-- directive:myDirective -->
-		<input type="text" ng-model="filter">
+<body style="padding-bottom:200px;">
+	<div ng-app="myapp" ng-controller="controller">
 		<ul>
-			<li ng-repeat="x in arr |filter:filter | orderBy:'b'">{{x.a +' '+x.b}}</li>
+			<li ng-repeat="x in arr">{{x | myFilter}}</li>
 		</ul>
+		<h1>读取json</h1>
+		<table>
+			<tr style="text-align:left;">
+				<th>number</th>
+				<th>Name</th>
+				<th>City</th>
+				<th>Country</th>
+			</tr>
+			<tr ng-repeat="x in json | orderBy:'Name'">
+				<td>{{$index}}</td>
+				<td>{{x.Name}}</td>
+				<td>{{x.City}}</td>
+				<td>{{x.Country}}</td>
+			</tr>
+		</table>
+		<p><select ng-model="select" ng-options="x.City for x in json"></select></p>
+		<div>
+			<button ng-disabled="switch">点我</button><input type="checkbox" ng-model="switch">
+		</div>
+		<div ng-controller="controller2">
+			<input type="checkbox" ng-model="onoff">
+			<div class="animation" ng-hide="onoff"></div>
+		</div>
 	</div>
-	<script type="text/javascript" src="http://apps.bdimg.com/libs/angular.js/1.5.0-beta.0/angular.min.js"></script>
 	<script type="text/javascript">
-		var app = angular.module("myApp",[]);
-		app.controller("myController",function($scope,$rootScope){
-			$scope.arr = [
-				{a:1,b:"bbb"},
-				{a:3,b:"aaa"},
-				{a:2,b:"ccc"},
-			];
+		var app = angular.module('myapp',['ngAnimate']);
+		//自定义服务
+		app.service('myService',function(){
+			this.abs = function(x){
+				return Math.abs(x);
+			};
 		});
-		app.directive("myDirective",function(){
-			return {
-				// restrict:"C",
-				// replace:true,
-				template:"<h1>unorder list</h1>"
-			}
-		})
+		// 自定义过滤器
+		app.filter('myFilter',['myService',function(myService){
+			return function(x){
+				return myService.abs(x);
+			};
+		}])
+		app.controller('controller',function($scope,$rootScope,$location,$http,$timeout,$interval,myService){
+			$scope.arr = [0,-1,2,-3];
+			$http.get('Customers_JSON.php').success(function(response){
+				$scope.json = response.records;
+			})
+
+		});
+		app.controller('controller2',function($scope){
+			// $scope.onoff = false;
+		});
 	</script>
 </body>
 </html>
