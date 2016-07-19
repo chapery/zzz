@@ -4,67 +4,17 @@
 <head>
     <meta charset="utf-8">
     <style>
-        .imgAlt{position: relative;}
-        .imgAlt:after{
-            content:attr(src);
-            display:block;
-            position: absolute;
-            padding-left:20px;
-            height:20px;
-            left:0px;
-            top:0px;
-            z-index: 3;
-            background:white url(images/load_small.gif) left center no-repeat;
-        }
-        ol{list-style: none;}
-        ol li{counter-increment: item;}
-        ol li:before{content:counter(item)'. ';}
-        table{overflow: hidden;}
-        table tr:hover{background:lime;}
-        table th{position: relative;}
-        table td{position: relative;}
-        table td:hover:after{content:""; display:block; width:100%; height:10000px; background:lime; position: absolute; left:0px; top:-5000px; z-index:-1;}
+        .box{height:; background-color: silver; font-size: 24px; line-height: 24px;}
+        img{vertical-align: text-bottom; width:20px; height:20px;}
+        span{background-color: cyan;}
+        span:nth-of-type(1){font-size: 24px;}
+        span:nth-of-type(2){font-size: 32px;}
+        i{vertical-align:super; font-style: normal;}
     </style>
 </head>
-<body style="background:azure;">
-    <div style="background:gray; overflow:hidden;">
-        <img style="float:left; border:20px dashed red;" src="images/texture.jpg">
-        <div style="overflow:hidden; background:silver; height:100%;">原标题：经习近平主席和中央军委批中国军队工作组乘军机赶赴南苏丹本报北京7月13日电（记者倪光辉）经习近平主席和中央军委批准，中国军队派出工作组于13日下午6时许乘空军飞机赶赴南苏丹朱巴地区。</div>
-    </div>
-    <div style="width:100px; height:100px; background:url(images/slideBtn.png) left top no-repeat; filter: drop-shadow(40px 0px 0px black); -webkit-filter: drop-shadow(40px 0px 0px black);"></div>
-    <a href="images/pic.jpg" download>下载</a><br/>
-    <img class="imgAlt" src="images/texture.png">
-    <ol>
-        <li>item1</li>
-        <li>item2</li>
-        <li>item3</li>
-        <li>item4</li>
-        <li>item5</li>
-    </ol>
-    <table class="table" cellspacing="0" >
-        <tr>
-            <th>title1</th>
-            <th>title2</th>
-            <th>title3</th>
-        </tr>
-        <tr>
-            <th>row1</th>
-            <td>col1</td>
-            <td>col2</td>
-        </tr>
-        <tr>
-            <th>row2</th>
-            <td>col1</td>
-            <td>col2</td>
-        </tr>
-        <tr>
-            <th>row3</th>
-            <td>col1</td>
-            <td>col2</td>
-        </tr>
-    </table>
+<body>
+    <div class="box"><img src="images/texture.jpg"><span>CH<sup>1</sup>EN<i>1</i></span><span>20px</span></div>
 </body>
     <script>
-    // alert(navigator.appVersion)
     </script>
 </html>
