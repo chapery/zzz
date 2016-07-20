@@ -1,0 +1,10 @@
+require.config({
+	baseUrl:'js',
+	paths:{
+		jquery:'../../jquery/jquery'
+	}
+})
+require(['require','./shirt','jquery'],function(require,shirt,jquery){
+	console.log(shirt);
+	console.log($);
+});
