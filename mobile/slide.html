@@ -2,23 +2,95 @@
 <html>
 <head>
 	<title>slide</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, naximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<style>
-		html,body,div{margin: 0; padding: 0;}
-		.slide-wrap{counter-reset: box 0;}
-		.slide-item{}
-		.box{width:100%; height:200px; line-height: 200px; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
-		.box:after{content:counter(box);}
+		html,body,div,ul,li{margin: 0; padding: 0;}
+		li{list-style: none; }
+		.slide-wrap{height:200px; overflow:hidden; counter-reset: box 0;}
+		.slide-list{width:100%; height:100%; position: relative; left:0px;}
+		.slide-list.active{transition:all .4s ease-out; -webkit-transition:all .4s ease-out;}
+		.slide-item{width:100%; height:100%; position: absolute; left:0px; top:0px;}
 		.slide-item:nth-child(1){background-color:aqua;}
 		.slide-item:nth-child(2){background-color:aquamarine;}
 		.slide-item:nth-child(3){background-color:lawnGreen;}
+		.slide-item:nth-child(4){background-color:gold;}
+		.slide-item:nth-child(5){background-color:hotPink;}
+		.box{width:100%; height: 100%; line-height: 200px; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
+		.box:after{content:counter(box);}
 	</style>
 </head>
 <body>
 	<div class="slide-wrap">
-		<div class="slide-item"><div class="box"></div></div>
-		<div class="slide-item"><div class="box"></div></div>
-		<div class="slide-item"><div class="box"></div></div>
+		<ul class="slide-list">
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+		</ul>
 	</div>
+	<script>
+		var TouchSlide = function(opt){
+			// 扩展对象方法
+			function _extend(target,source){
+				for(var key in source) target[key] = source[key];
+				return target;
+			}
+			// 伪数组转化为数组方法
+			function _toArray(pseudo){
+				return Array.prototype.slice.call(pseudo);
+			}
+			this.settings = {
+				wrap:'.slide-wrap',
+				list:'.slide-list',
+				items:'.slide-item',
+				autoPlay:false,
+				interval:2000,
+				loop:false,
+				current:0
+			};
+			_extend(this.settings,opt);
+			this.wrap = document.querySelector(this.settings.wrap);
+			this.list = this.wrap.querySelector(this.settings.list);
+			this.items = _toArray(this.wrap.querySelectorAll(this.settings.items));
+			this.tranX = 0;
+			this.init();
+		};
+		TouchSlide.prototype = {
+			constructor:TouchSlide,
+			init:function(){
+				this.layout();
+				this.list.addEventListener('touchstart',this.touchstartHandler.bind(this),false);
+				this.list.addEventListener('touchmove',this.touchmoveHandler.bind(this),false);
+				this.list.addEventListener('touchend',this.touchendHandler.bind(this),false);
+			},
+			layout:function(){
+				var self = this;
+				this.items.forEach(function(item,index){
+					item.style.left = index*self.wrap.clientWidth + 'px';
+				});
+			},
+			touchstartHandler:function(e){
+				this.startX = e.touches[0].pageX;
+				this.startY = e.touches[0].pageY;
+				this.disX = 0;
+				this.timeStamp = Date.now();
+				this.list.classList.remove('active');
+			},
+			touchmoveHandler:function(e){
+				e.preventDefault();
+				var x = e.touches[0].pageX;
+				var y = e.touches[0].pageY;
+				this.disX = x - this.startX;
+				this.list.style.transform = 'translate3d(' + (this.tranX + this.disX) + 'px,0,0)';
+			},
+			touchendHandler:function(e){
+				var itemW = this.items[0].offsetWidth;
+				this.list.classList.add('active');
+				this.list.style.transform = 'translate3d(' + this.tranX + 'px,0,0)';
+			}
+		}
+		var slide = new TouchSlide();
+	</script>
 </body>
 </html>

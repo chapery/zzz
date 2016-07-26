@@ -132,3 +132,11 @@ var requestFrame = (function(){
         window.setTimeout(callback,67);//15FPS;
     }
 })();
+
+// 中文字符
+function CheckChinese(obj, val) {　　
+    var reg = new RegExp("[\\u4E00-\\u9FFF]+", "g");　　
+    if (reg.test(val)) {
+        alert("有汉字");
+    }
+};
