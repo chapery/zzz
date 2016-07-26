@@ -7,14 +7,17 @@
 		html,body,div,ul,li{margin: 0; padding: 0;}
 		li{list-style: none; }
 		.slide-wrap{height:200px; overflow:hidden; counter-reset: box 0;}
-		.slide-list{width:100%; height:100%; position: relative; left:0px;}
-		.slide-list.active{transition:all .4s ease-out; -webkit-transition:all .4s ease-out;}
+		.slide-list{width:100%; height:100%; position: relative;}
+		.slide-list.active{-webkit-transition:all .3s ease-out; transition:all .3s ease-out;}
 		.slide-item{width:100%; height:100%; position: absolute; left:0px; top:0px;}
 		.slide-item:nth-child(1){background-color:aqua;}
-		.slide-item:nth-child(2){background-color:aquamarine;}
+		.slide-item:nth-child(2){background-color:hotPink;}
 		.slide-item:nth-child(3){background-color:lawnGreen;}
 		.slide-item:nth-child(4){background-color:gold;}
-		.slide-item:nth-child(5){background-color:hotPink;}
+		.slide-item:nth-child(5){background-color:aquamarine;}
+		.slide-item:nth-child(6){background-color:orange;}
+		.slide-item:nth-child(7){background-color:lime;}
+		.slide-item:nth-child(8){background-color:deepPink;}
 		.box{width:100%; height: 100%; line-height: 200px; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
 		.box:after{content:counter(box);}
 	</style>
@@ -27,19 +30,13 @@
 			<li class="slide-item"><div class="box"></div></li>
 			<li class="slide-item"><div class="box"></div></li>
 			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
+			<li class="slide-item"><div class="box"></div></li>
 		</ul>
 	</div>
 	<script>
 		var TouchSlide = function(opt){
-			// 扩展对象方法
-			function _extend(target,source){
-				for(var key in source) target[key] = source[key];
-				return target;
-			}
-			// 伪数组转化为数组方法
-			function _toArray(pseudo){
-				return Array.prototype.slice.call(pseudo);
-			}
 			this.settings = {
 				wrap:'.slide-wrap',
 				list:'.slide-list',
@@ -49,11 +46,13 @@
 				loop:false,
 				current:0
 			};
-			_extend(this.settings,opt);
+			this._extend(this.settings,opt);
 			this.wrap = document.querySelector(this.settings.wrap);
 			this.list = this.wrap.querySelector(this.settings.list);
-			this.items = _toArray(this.wrap.querySelectorAll(this.settings.items));
+			this.items = this._toArray(this.wrap.querySelectorAll(this.settings.items));
 			this.tranX = 0;
+			this.arrP = [];
+			this.maxSpeed = 0.2;
 			this.init();
 		};
 		TouchSlide.prototype = {
@@ -72,23 +71,60 @@
 			},
 			touchstartHandler:function(e){
 				this.startX = e.touches[0].pageX;
-				this.startY = e.touches[0].pageY;
-				this.disX = 0;
-				this.timeStamp = Date.now();
 				this.list.classList.remove('active');
+				this.arrP.push({'x':this.startX, 't':Date.now()});
 			},
 			touchmoveHandler:function(e){
 				e.preventDefault();
-				var x = e.touches[0].pageX;
-				var y = e.touches[0].pageY;
-				this.disX = x - this.startX;
-				this.list.style.transform = 'translate3d(' + (this.tranX + this.disX) + 'px,0,0)';
+				this.endX = e.touches[0].pageX;
+				this.list.style[this._transform()] = 'translate3d(' + (this.tranX + this.endX - this.startX) + 'px, 0, 0)';
+
+				//取最后5次touchmove：x坐标，timeStamp
+				if(this.arrP.length > 5) this.arrP.shift();
+				this.arrP.push({'x':this.endX, 't':Date.now()});
 			},
 			touchendHandler:function(e){
 				var itemW = this.items[0].offsetWidth;
+				var distance = this.arrP[this.arrP.length-1].x - this.arrP[0].x;
+				var time = Date.now() - this.arrP[0].t;
+				var speed = Math.abs(distance/time);
+
+				if(speed > this.maxSpeed){
+					if(this.endX > this.startX && distance > 0){
+						this.tranX += itemW;
+					}else if(this.endX < this.startX && distance < 0){
+						this.tranX -= itemW;
+					};
+				}else{
+					if(this.endX - this.startX > itemW/2){
+						this.tranX += itemW;
+					}else if(this.endX - this.startX < -itemW/2){
+						this.tranX -= itemW;
+					};
+				};
+
 				this.list.classList.add('active');
-				this.list.style.transform = 'translate3d(' + this.tranX + 'px,0,0)';
+				this.list.style[this._transform()] = 'translate3d(' + this.tranX + 'px, 0, 0)';
+				this.arrP = [];
+			},
+			// 扩展对象方法
+			_extend: function(target,source){
+				for(var key in source) target[key] = source[key];
+				return target;
+			},
+			// 伪数组转化为数组方法
+			_toArray: function(pseudoArr){
+				return Array.prototype.slice.call(pseudoArr);
+			},
+			// transform前缀处理
+			_transform: function(){
+				if(typeof document.body.style.transform === 'string'){
+					return 'transform';
+				}else if(typeof document.body.style.webkitTransform === 'string'){
+					return 'webkitTransform';
+				};
 			}
+
 		}
 		var slide = new TouchSlide();
 	</script>
