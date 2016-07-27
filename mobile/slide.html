@@ -8,15 +8,16 @@
 		li{list-style: none; }
 		.slide-wrap{height:200px; overflow:hidden; counter-reset: box 0;}
 		.slide-list{width:100%; height:100%; position: relative;}
-		.slide-list.active{-webkit-transition:all .3s ease-out; transition:all .3s ease-out;}
+		.slide-list.active{-webkit-transition:all .4s cubic-bezier(0.2,0.6,0.4,1); transition:all .4s cubic-bezier(0.2,0.6,0.4,1);}
 		.slide-item{width:100%; height:100%; position: absolute; left:0px; top:0px;}
+		
 		.slide-item:nth-child(1){background-color:aqua;}
 		.slide-item:nth-child(2){background-color:hotPink;}
 		.slide-item:nth-child(3){background-color:lawnGreen;}
 		.slide-item:nth-child(4){background-color:gold;}
-		.slide-item:nth-child(5){background-color:aquamarine;}
+		.slide-item:nth-child(5){background-color:lime;}
 		.slide-item:nth-child(6){background-color:orange;}
-		.slide-item:nth-child(7){background-color:lime;}
+		.slide-item:nth-child(7){background-color:aquamarine;}
 		.slide-item:nth-child(8){background-color:deepPink;}
 		.box{width:100%; height: 100%; line-height: 200px; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
 		.box:after{content:counter(box);}
@@ -25,9 +26,6 @@
 <body>
 	<div class="slide-wrap">
 		<ul class="slide-list">
-			<li class="slide-item"><div class="box"></div></li>
-			<li class="slide-item"><div class="box"></div></li>
-			<li class="slide-item"><div class="box"></div></li>
 			<li class="slide-item"><div class="box"></div></li>
 			<li class="slide-item"><div class="box"></div></li>
 			<li class="slide-item"><div class="box"></div></li>
@@ -47,64 +45,98 @@
 				current:0
 			};
 			this._extend(this.settings,opt);
-			this.wrap = document.querySelector(this.settings.wrap);
-			this.list = this.wrap.querySelector(this.settings.list);
-			this.items = this._toArray(this.wrap.querySelectorAll(this.settings.items));
-			this.tranX = 0;
-			this.arrP = [];
-			this.maxSpeed = 0.2;
+			this.wrap = document.querySelector(this.settings.wrap);//滑动区域顶层
+			this.list = this.wrap.querySelector(this.settings.list);//列表页包裹层
+			this.items = this._toArray(this.wrap.querySelectorAll(this.settings.items));//列表项集合
+			this.wrapW = this.wrap.offsetWidth;//滑动区域宽度
+			this.itemCur = this.settings.current;//当前页索引
+			this.curLeft = parseFloat(this.items[this.itemCur].style.left || 0);//当前页left值
+			this.tranX = -this.wrapW * this.itemCur;//列表页包裹层translateX值
+			this.arrP = [];//用于保存最后5次touchmove事件中的pageX和timeStamp（计算手指滑动速度）
+			this.maxSpeed = 0.2;//速度界限（distance/time）,超过此速度时进行切换
 			this.init();
 		};
 		TouchSlide.prototype = {
 			constructor:TouchSlide,
 			init:function(){
 				this.layout();
-				this.list.addEventListener('touchstart',this.touchstartHandler.bind(this),false);
-				this.list.addEventListener('touchmove',this.touchmoveHandler.bind(this),false);
-				this.list.addEventListener('touchend',this.touchendHandler.bind(this),false);
+				this.list.addEventListener('touchstart', this.touchstartHandler.bind(this),false);
+				this.list.addEventListener('touchmove', this.touchmoveHandler.bind(this),false);
+				this.list.addEventListener('touchend', this.touchendHandler.bind(this),false);
 			},
 			layout:function(){
 				var self = this;
 				this.items.forEach(function(item,index){
-					item.style.left = index*self.wrap.clientWidth + 'px';
+					item.style.left = index * self.wrapW + 'px';
 				});
+				this.list.style[this._transform] = 'translate3d(' + this.tranX + 'px, 0, 0)';
 			},
 			touchstartHandler:function(e){
 				this.startX = e.touches[0].pageX;
+				this.startY = e.touches[0].clientY;
+				delete this.endY;
+
 				this.list.classList.remove('active');
 				this.arrP.push({'x':this.startX, 't':Date.now()});
+
+				var prevIndex = this.itemCur <= 0 ? this.items.length-1 : this.itemCur - 1;
+				var nextIndex = this.itemCur >= this.items.length - 1 ? 0 : this.itemCur + 1;
+				this.items[prevIndex].style.left = this.curLeft - this.wrapW + 'px';
+				this.items[nextIndex].style.left = this.curLeft + this.wrapW + 'px';
 			},
 			touchmoveHandler:function(e){
-				e.preventDefault();
-				this.endX = e.touches[0].pageX;
-				this.list.style[this._transform()] = 'translate3d(' + (this.tranX + this.endX - this.startX) + 'px, 0, 0)';
 
+				this.endX = e.touches[0].pageX;
+
+				// console.log(this.startX, this.startY, e.touches[0].pageX, e.touches[0].pageY)
+				if(typeof this.endY === 'undefined'){
+					this.endY = e.touches[0].clientY;
+					if(Math.abs(this.endY - this.startY) > Math.abs(this.endX - this.startX)){
+						this.endY = false;//是否可滑动
+					};
+				};
+				if(!this.endY) return;
+
+				e.preventDefault();
+
+				this.list.style[this._transform] = 'translate3d(' + (this.tranX + (this.endX - this.startX)) + 'px, 0, 0)';
+				
 				//取最后5次touchmove：x坐标，timeStamp
 				if(this.arrP.length > 5) this.arrP.shift();
 				this.arrP.push({'x':this.endX, 't':Date.now()});
+
+				// 只有两页的情况
+				if(this.items.length == 2){
+					var itemAnother = this.items[this.itemCur - 1] || this.items[this.itemCur + 1];
+					if(this.endX < this.startX && parseFloat(itemAnother.style.left) < this.curLeft){
+						itemAnother.style.left = this.curLeft + this.wrapW + 'px';
+					}else if(this.endX > this.startX && parseFloat(itemAnother.style.left) > this.curLeft){
+						itemAnother.style.left = this.curLeft - this.wrapW + 'px';
+					};
+				};
 			},
 			touchendHandler:function(e){
-				var itemW = this.items[0].offsetWidth;
+
 				var distance = this.arrP[this.arrP.length-1].x - this.arrP[0].x;
 				var time = Date.now() - this.arrP[0].t;
-				var speed = Math.abs(distance/time);
+				var speed = distance/time;
+				var offsetX = this.endX - this.startX;
 
-				if(speed > this.maxSpeed){
-					if(this.endX > this.startX && distance > 0){
-						this.tranX += itemW;
-					}else if(this.endX < this.startX && distance < 0){
-						this.tranX -= itemW;
+				if(Math.abs(speed) > this.maxSpeed || Math.abs(offsetX) > this.wrapW/2){//切换页面
+					if(speed > 0 && offsetX > 0){
+						this.tranX += this.wrapW;
+						this.itemCur--;
+					}else if(speed < 0 && offsetX < 0){
+						this.tranX -= this.wrapW;
+						this.itemCur++;
 					};
-				}else{
-					if(this.endX - this.startX > itemW/2){
-						this.tranX += itemW;
-					}else if(this.endX - this.startX < -itemW/2){
-						this.tranX -= itemW;
-					};
+					if(this.itemCur < 0) this.itemCur = this.items.length - 1;
+					if(this.itemCur > this.items.length - 1) this.itemCur = 0;
+					this.curLeft = parseFloat(this.items[this.itemCur].style.left);
 				};
 
 				this.list.classList.add('active');
-				this.list.style[this._transform()] = 'translate3d(' + this.tranX + 'px, 0, 0)';
+				this.list.style[this._transform] = 'translate3d(' + this.tranX + 'px, 0, 0)';
 				this.arrP = [];
 			},
 			// 扩展对象方法
@@ -117,14 +149,13 @@
 				return Array.prototype.slice.call(pseudoArr);
 			},
 			// transform前缀处理
-			_transform: function(){
+			_transform: (function(){
 				if(typeof document.body.style.transform === 'string'){
 					return 'transform';
 				}else if(typeof document.body.style.webkitTransform === 'string'){
 					return 'webkitTransform';
 				};
-			}
-
+			})()
 		}
 		var slide = new TouchSlide();
 	</script>
