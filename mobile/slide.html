@@ -49,17 +49,17 @@
 				current:0
 			};
 			this._extend(this.settings,opt);
-			this.wrap = document.querySelector(this.settings.wrap);//滑动区域顶层
-			this.list = this.wrap.querySelector(this.settings.list);//列表页包裹层
-			this.items = this._toArray(this.wrap.querySelectorAll(this.settings.items));//列表项集合
+			this.wrap = document.querySelector(this.settings.wrap); //滑动区域顶层
+			this.list = this.wrap.querySelector(this.settings.list); //列表页包裹层
+			this.items = this._toArray(this.wrap.querySelectorAll(this.settings.items)); //列表项集合
 			this.indicator = this.wrap.querySelector(this.settings.indicator);
-			this.wrapW = this.wrap.offsetWidth;//滑动区域宽度
-			this.itemCur = this.settings.current;//当前页索引
-			this.curLeft = parseFloat(this.items[this.itemCur].style.left || 0);//当前页left值
-			this.tranX = -this.wrapW * this.itemCur;//列表页包裹层translateX值
-			this.arrP = [];//用于保存最后5次touchmove事件中的pageX和timeStamp（计算手指滑动速度）
-			this.maxSpeed = 0.2;//速度界限（distance/time）,超过此速度时进行切换
-			this.timer = null;//定时器
+			this.wrapW = this.wrap.offsetWidth; //滑动区域宽度
+			this.itemCur = this.settings.current; //当前页索引
+			this.curLeft = parseFloat(this.items[this.itemCur].style.left || 0); //当前页left值
+			this.tranX = -this.wrapW * this.itemCur; //列表页包裹层translateX值
+			this.arrP = []; //用于保存最后5次touchmove事件中的pageX和timeStamp（计算手指滑动速度）
+			this.maxSpeed = 0.2; //速度界限（distance/time）,超过此速度时进行切换
+			this.timer = null; //定时器
 			this.init();
 		};
 		TouchSlide.prototype = {
@@ -88,14 +88,19 @@
 					};
 					return indHtml;
 				})();
+
 				this.indicator.children[this.settings.current].classList.add('active');
+
 				this.indicator.style.width = (function(){
 					var _circle = self.indicator.firstElementChild;
-					var _offsetW = _circle.offsetWidth + parseFloat(getComputedStyle(_circle,null)['marginLeft']) + parseFloat(getComputedStyle(_circle,null)['marginRight']);
+					var _mgL = parseFloat(getComputedStyle(_circle,null)['marginLeft']);
+					var _mgR =  parseFloat(getComputedStyle(_circle,null)['marginRight']);
+					var _offsetW = _circle.offsetWidth + _mgL + _mgR;
 					return _offsetW*self.items.length + 'px';
 				})();
 			},
 			touchstartHandler:function(e){
+
 				this.startX = e.touches[0].pageX;
 				this.startY = e.touches[0].clientY;
 				delete this.endY;
@@ -141,13 +146,14 @@
 				var speed = distance/time;
 				var offsetX = this.endX - this.startX;
 
-				if(Math.abs(speed) > this.maxSpeed || Math.abs(offsetX) > this.wrapW/2){//切换页面
+				if(Math.abs(speed) > this.maxSpeed || Math.abs(offsetX) > this.wrapW/2){ //切换页面
 					if(speed > 0 && offsetX > 0){
 						this.gotoItem(-1);
 					}else if(speed < 0 && offsetX < 0){
 						this.gotoItem(1);
 					}
 				};
+
 				this.gotoItem(0);
 				this.arrP = [];
 				this.autoPlayHandler();
@@ -177,21 +183,25 @@
 				this.items[prevIndex].style.left = this.curLeft - this.wrapW + 'px';
 				this.items[nextIndex].style.left = this.curLeft + this.wrapW + 'px';
 			},
+			
 			//自动播放
 			autoPlayHandler:function(){
 				if(this.settings.autoPlay){
 					this.timer = setInterval(this.gotoItem.bind(this), this.settings.interval, 1);
 				};
 			},
+
 			// 扩展对象方法
 			_extend: function(target,source){
 				for(var key in source) target[key] = source[key];
 				return target;
 			},
+
 			// 伪数组转化为数组方法
 			_toArray: function(pseudoArr){
 				return Array.prototype.slice.call(pseudoArr);
 			},
+
 			// transform前缀处理
 			_transform: (function(){
 				if(typeof document.body.style.transform == 'string'){
