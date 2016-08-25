@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>angularJs</title>
+</head>
+<body>
+	<input ng-model="inpUrl" type="text" value="google.com">
+	<div my-directive my-href="{{inpUrl}}" my-link-text="click me to go Google"></div>
+	<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	<script>
+		angular.module('myApp', [])
+		.directive('myDirective', function() {
+			return {
+				restrict: 'A',
+				replace: true,
+				scope: {
+					myUrl: '@myHref',
+					myLinkText: '@',
+				},
+				template: '<a href="http://{{myUrl}}">{{myLinkText}}</a>'
+			}
+		})
+	</script>
+</body>
+</html>
