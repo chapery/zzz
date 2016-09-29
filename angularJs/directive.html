@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>angularJs</title>
+</head>
+<body>
+	<my-directive></my-directive>
+	<div my-directive></div>
+	<div class="my-directive"></div>
+	<!-- directive:my-directive -->
+	<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	<script>
+		angular.module('myApp', [])
+		.directive('myDirective', function() {
+			return {
+				restrict: 'E', //元素（E）、属性（A）、类（C）、注释（M），应坚持使用属性方式，因为它有较好的跨浏览器兼容性
+				replace: true, //是否取代指令声明
+				template: '<a href="http://www.google.com">click me to go Google</a>'
+			}
+		})
+	</script>
+</body>
+</html>

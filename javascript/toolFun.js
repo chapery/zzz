@@ -145,19 +145,20 @@ function transitionEnd() {
     var el = document.createElement('bootstrap')
 
     var transEndEventNames = {
-      'WebkitTransition' : 'webkitTransitionEnd',
-      'MozTransition'    : 'transitionend',
-      'OTransition'      : 'oTransitionEnd otransitionend',
-      'transition'       : 'transitionend'
+        'WebkitTransition': 'webkitTransitionEnd',
+        'MozTransition': 'transitionend',
+        'OTransition': 'oTransitionEnd otransitionend',
+        'transition': 'transitionend'
     }
 
     for (var name in transEndEventNames) {
-      if (el.style[name] !== undefined) {
-        return { end: transEndEventNames[name] }
-      }
+        if (el.style[name] !== undefined) {
+            return { end: transEndEventNames[name] }
+        }
     }
 
     return false // explicit for ie8 (  ._.)
+<<<<<<< HEAD
   }
 
 /* method delegate 事件委托方法
@@ -179,3 +180,17 @@ function delegate(curTarget, type, sourceSelectors, callback) {
     }, false);
 };
 
+=======
+};
+
+//事件绑定
+function addListener(target, type, handler) {
+    if (target.addEventListener) {
+        target.addEventListener(type, handler, false);
+    } else if (target.attachEvent) { //for IE8-
+        target.attachEvent('on' + type, handler);
+    } else {
+        target['on' + type] = handler;
+    }
+}
+>>>>>>> a0f99dba6b79c4c223a9608b45013bedd5e45a4f
