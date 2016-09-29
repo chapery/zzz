@@ -159,3 +159,23 @@ function transitionEnd() {
 
     return false // explicit for ie8 (  ._.)
   }
+
+/* method delegate 事件委托方法
+ * param [string] 事件类型
+ * param [Object] 事件处理对象
+ * param [string] 事件目标
+ * param [function] 事件回调
+ */
+function delegate(curTarget, type, sourceSelectors, callback) {
+    var source = toArray(document.querySelectorAll(sourceSelectors));
+
+    curTarget.addEventListener(type, function(e) {
+        var isChild = source.some(function(item) {
+            return item.contains(e.target);
+        });
+        if (source.indexOf(e.target) > -1 || isChild) {
+            callback.call(e.target, e);
+        };
+    }, false);
+};
+

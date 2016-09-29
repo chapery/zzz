@@ -6,8 +6,8 @@
 	<style>
 		html,body,div,ul,li{margin: 0; padding: 0;}
 		li{list-style: none; }
-		.slide-wrap{height:200px; overflow:hidden; position: relative; counter-reset: box 0;}
-		.slide-wrap .slide-list{width:100%; height:100%; position: relative;}
+		.slide-wrap{width:100%; height:0px; padding-top: 50%; overflow:hidden; position: relative; counter-reset: box 0;}
+		.slide-wrap .slide-list{width:100%; height:100%; position: absolute; left:0px; top:0px;}
 		.slide-wrap .slide-list.active{-webkit-transition:all .4s cubic-bezier(0.2,0.6,0.4,1); transition:all .4s cubic-bezier(0.2,0.6,0.4,1);}
 		.slide-wrap .slide-item{width:100%; height:100%; position: absolute; left:0px; top:0px;}
 		.slide-wrap .slide-ind{position: absolute; width:auto; bottom:10px; left:0; right:0; margin:0 auto; white-space: nowrap; line-height: 0;}
@@ -21,8 +21,8 @@
 		.slide-item:nth-child(6){background-color:orange;}
 		.slide-item:nth-child(7){background-color:aquamarine;}
 		.slide-item:nth-child(8){background-color:deepPink;}
-		.box{width:100%; height: 100%; line-height: 200px; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
-		.box:after{content:counter(box);}
+		.box{width:100%; height: 100%; text-align: center; font-size: 50px; font-family: Arial; counter-increment: box 1;}
+		.box:after{content:counter(box); display: inline-block; line-height: 1; position: relative; top:50%; -webkit-transform:translateY(-50%); transform:translateY(-50%);}
 	</style>
 </head>
 <body>
@@ -36,6 +36,7 @@
 		</ul>
 		<div class="slide-ind"></div>
 	</div>
+	<div style="height:1000px;">height:1000px;</div>
 	<script>
 		var TouchSlide = function(opt){
 			this.settings = {
@@ -60,6 +61,7 @@
 			this.arrP = []; //用于保存最后5次touchmove事件中的pageX和timeStamp（计算手指滑动速度）
 			this.maxSpeed = 0.2; //速度界限（distance/time）,超过此速度时进行切换
 			this.timer = null; //定时器
+			this.scrollY = false; //纵向滚动
 			this.init();
 		};
 		TouchSlide.prototype = {
@@ -107,19 +109,25 @@
 
 				this.list.classList.remove('active');
 				this.arrP.push({'x':this.startX, 't':Date.now()});
+
 				this.timer && clearInterval(this.timer);
 			},
 			touchmoveHandler:function(e){
 
 				this.endX = e.touches[0].pageX;
 
+				// 判断手势
 				if(typeof this.endY === 'undefined'){
 					this.endY = e.touches[0].clientY;
 					if(Math.abs(this.endY - this.startY) > Math.abs(this.endX - this.startX)){
-						this.endY = false;//是否可滑动
-					};
+						this.scrollY = true;
+						this.autoPlayHandler();
+					}else{
+						this.scrollY = false;
+					}
 				};
-				if(!this.endY) return;
+
+				if(this.scrollY) return;
 
 				e.preventDefault();
 
@@ -156,7 +164,9 @@
 
 				this.gotoItem(0);
 				this.arrP = [];
-				this.autoPlayHandler();
+				if(!this.scrollY){
+					this.autoPlayHandler();
+				};
 			},
 			gotoItem:function(num){
 				if(num == -1){
@@ -187,6 +197,7 @@
 			//自动播放
 			autoPlayHandler:function(){
 				if(this.settings.autoPlay){
+					// alert(111);
 					this.timer = setInterval(this.gotoItem.bind(this), this.settings.interval, 1);
 				};
 			},
