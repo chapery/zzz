@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>highlightjs</title>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/monokai-sublime.min.css">
+    <style>
+		.hljs{
+			font-size: 16px;
+			line-height: 1.4;
+			font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+		}
+    </style>
+</head>
+<body>
+
+<h2>html</h2>
+<pre><code class="html">
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;title>Document&lt;/title>
+&lt;/head>
+&lt;body>
+
+&lt;/body>
+&lt;/html>
+
+</code></pre>
+
+<h2>javascript</h2>
+<pre><code class="javascript">
+var person = {
+    name: 'jack',
+    say: function() {
+        console.log(this.name);
+    }
+};
+var myPerson = Object.create(person, {names:{value:12, writable:true, enumberable:true}});
+console.dir(myPerson);
+function Foo(){
+    this.x = 1;
+    this.y = 2;
+}
+
+</code></pre>
+
+<h2>css</h2>
+<pre><code class="scss">
+.hljs{
+    font-size: 16px;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+</code></pre>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
