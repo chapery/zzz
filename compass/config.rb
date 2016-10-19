@@ -29,3 +29,5 @@ line_comments = false
 
 # clear sass cache
 cache = false
+
+sourcemap = true
