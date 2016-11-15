@@ -158,8 +158,7 @@ function transitionEnd() {
     }
 
     return false // explicit for ie8 (  ._.)
-<<<<<<< HEAD
-  }
+}
 
 /* method delegate 事件委托方法
  * param [string] 事件类型
@@ -180,9 +179,6 @@ function delegate(curTarget, type, sourceSelectors, callback) {
     }, false);
 };
 
-=======
-};
-
 //事件绑定
 function addListener(target, type, handler) {
     if (target.addEventListener) {
@@ -193,4 +189,3 @@ function addListener(target, type, handler) {
         target['on' + type] = handler;
     }
 }
->>>>>>> a0f99dba6b79c4c223a9608b45013bedd5e45a4f
