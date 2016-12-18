@@ -1,43 +1,84 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="utf-8">
-    <style>
-        .box{height:; background-color: silver; font-size: 24px; line-height: 24px;}
-        img{vertical-align: text-bottom; width:20px; height:20px;}
-        span{background-color: cyan;}
-        span:nth-of-type(1){font-size: 24px;}
-        span:nth-of-type(2){font-size: 32px;}
-        i{vertical-align:super; font-style: normal;}
-    </style>
-</head>
-<body><!-- <div>1111111</div> -->
-    <div class="box"><img src="images/texture.jpg"><span>CH<sup>1</sup>EN<i>1</i></span><span>20px</span></div>
-    <script>
-        var comment = document.body.firstChild;
-        var ele = document.body.firstElementChild;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+      #editor{
+        height: 200px;
+        border: 1px solid black;
+      }
 
-        var person = {
-            name: 'jack',
-            say: function() {
-                console.log(this.name);
-            }
-        };
-        var myPerson = Object.create(person, {names:{value:12, writable:true, enumberable:true}});
-        console.dir(myPerson);
-        function Foo(){
-            this.x = 1;
-            this.y = 2;
-        }
-        Foo.prototype.say = function(){
-            console.log(this.x);
-        }
-        function Fooo(){
-            Foo.call(this);
-        }
-        Fooo.prototype = Object.create(Foo.prototype);
-        console.log(new Fooo());
-    </script>
+      .piece{
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px;
+        line-height: 2;
+        background-color: gray;
+      }
+  </style>
+</head>
+<body>
+    <div id="editor" contenteditable></div>
+    <textarea name="" id="" cols="30" rows="10"></textarea>
 </body>
+<script>
+var editor = document.getElementById('editor');
+
+editor.addEventListener('keydown', function(e) {
+    /*if (editor.querySelector('br')) {
+        editor.removeChild(editor.querySelector('br'));
+    }*/
+    if (e.keyCode == 13) {
+
+        e.preventDefault();
+
+        var last = this.lastChild;
+
+        if (last && last.nodeType == 3) {
+
+            console.log(last.nodeValue);
+
+            var ele = document.createElement('span');
+
+            ele.className = 'piece';
+            // ele.setAttribute('contenteditable', false);
+            ele.innerHTML = last.nodeValue.trim();
+            this.removeChild(last);
+            this.appendChild(ele);
+            
+            var space = document.createTextNode('\uFEFF');
+            this.appendChild(space);
+            
+            var selection = window.getSelection();
+            var range = document.createRange();
+            if (selection.rangeCount > 0) selection.removeAllRanges();
+            range.selectNode(this.lastChild);
+            selection.addRange(range);
+            selection.collapseToEnd();
+
+        }
+    }
+}, false);
+
+editor.addEventListener('paste', function(e) {
+    e.preventDefault();
+})
+
+editor.addEventListener('click', function(e) {
+    if (this.lastChild && this.lastChild.nodeType != 3) {
+        var space = document.createTextNode('\uFEFF');
+        this.appendChild(space);
+
+        var selection = window.getSelection();
+        var range = document.createRange();
+        if (selection.rangeCount > 0) selection.removeAllRanges();
+        range.selectNode(this.lastChild);
+        selection.addRange(range);
+        selection.collapseToEnd();
+
+    }
+})
+</script>
 </html>
