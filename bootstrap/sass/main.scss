@@ -1,0 +1,43 @@
+body{
+	font-family:"Microsoft Yahei","微软雅黑",Verdana,Arial,sans-serif;
+}
+.mes-list {
+    padding-left: 20px;
+    >li {
+        margin-top: 20px;
+        background-color: #f8f8f8;
+        padding: 10px;
+        .mesCon {
+            line-height: 1.8;
+        }
+        .replyBtn {
+            float: right;
+            font-size: 14px;
+        }
+        .replyCon {
+            margin-top: 5px;
+            >pre{
+            	line-height: 1.8;
+	            white-space: pre-wrap;
+	            word-break: break-all;
+	            font-family: inherit;
+            }
+        }
+        .replyTo{
+        	margin-top: 10px;
+        	.form-control{
+        		height:100px;
+        		resize:none;
+        		border-radius:none;
+            	line-height: 1.8;
+        		&:focus{
+        			box-shadow:none;
+        		}
+        	}
+        	.btn-primary {
+        	    float: right;
+        	    margin-top: 10px
+        	}
+        }
+    }
+}
