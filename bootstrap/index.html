@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>bootstrap</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body style="padding-top:50px;">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+    	<div class="nav navbar-nav">
+    		<li><a href="#">brand</a></li>
+    		<li><a href="#">link</a></li>
+    		<li><a href="#">link</a></li>
+    	</div>
+    </div>
+</nav>
+<div class="container">
+    <ul class="mes-list">
+        <li>
+            <h4>user1<a class="replyBtn" href="javascript:;">回复</a></h4>
+            <div class="mesCon">this is message 1</div>
+            <!-- <div class="replyCon"> this is reply content </div> -->
+            <div class="replyTo">
+                <form action="" method="post">
+                    <textarea class="form-control" rows="3"></textarea>
+                    <div class="clearfix"><button class="btn btn-primary" type="submit">确定</button></div>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $('.mes-list').on('click', '.replyBtn', function() {
+        $(this).parents('li').find('.replyTo').toggle();
+    })
+</script>
+</body>
+</html>

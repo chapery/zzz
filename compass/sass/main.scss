@@ -1,9 +1,5 @@
 @import "compass/support";
-@import "compass/layout";
 @import "compass/css3";
-@import "compass/layout/stretching";
-@import "compass/layout/grid-background";
-@import "compass/utilities/color/brightness";
 @import "compass/utilities/general";
 
 // @import 'compass/reset';
@@ -11,25 +7,28 @@
 
 @import "icon";
 
-$browser-minimum-versions:("ie":"6");
+$supported-browsers: chrome, safari, firefox, ie;
+$browser-minimum-versions:("ie":"9");
 
-.mydiv{display:none;color: #000; padding: 0px;}
-.mydiv2{display:none;}
-.mydiv3{display:none;}
-$grid-background-column-color:rgba(255,0,0,1);
-.mydiv4{
-	background-image:image-url('pic.jpg',false,'v=123555');
+
+.box-shadow{
+	// @include box-shadow(0 0 4px #888);
 }
 
 .clearfix{
-	@include legacy-pie-clearfix();
+	// @include clearfix();
+	// @include pie-clearfix();
+	// @include legacy-pie-clearfix();
 }
 
-.float-left{
-	@include float-left;
+.mydiv{ // cache buster
+	// background-image:image-url('pic.jpg',false,'v=123555');
 }
 
-.layout{
-	@include has-layout(block);
-	@include min-height(10px);
+.icon-wrong{
+	// background-image: inline-image('../images/wrong.svg');
+}
+
+.icon-app1{
+	// @include icon-sprite('app');
 }

@@ -1,9 +1,21 @@
 @import "compass/utilities/sprites";
 
+// 自动计算宽高
+$icon-sprite-dimensions: true;
+
+// vertical/horizontal/diagonal/smart
+$icon-layout: smart; 
+
 @import "icon/*.png";
 
-$icon: sprite-map("icon/*.png");
-// $iconFile: sprite-file($icon,);
+// 禁用伪类选择器
+// $disable-magic-sprite-selectors: true;
+
 @include all-icon-sprites();
 
-@debug sprite-names($icon);
+// $icon: sprite-map("icon/*.png");
+
+// @debug sprite-names($icon);
+
+// 命令行
+// compass sprite "images/icon/*.png"

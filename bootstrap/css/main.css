@@ -1,0 +1,13 @@
+@charset "UTF-8";
+body { font-family: "Microsoft Yahei","微软雅黑",Verdana,Arial,sans-serif; }
+
+.mes-list { padding-left: 20px; }
+.mes-list > li { margin-top: 20px; background-color: #f8f8f8; padding: 10px; }
+.mes-list > li .mesCon { line-height: 1.8; }
+.mes-list > li .replyBtn { float: right; font-size: 14px; }
+.mes-list > li .replyCon { margin-top: 5px; }
+.mes-list > li .replyCon > pre { line-height: 1.8; white-space: pre-wrap; word-break: break-all; font-family: inherit; }
+.mes-list > li .replyTo { margin-top: 10px; }
+.mes-list > li .replyTo .form-control { height: 100px; resize: none; border-radius: none; line-height: 1.8; }
+.mes-list > li .replyTo .form-control:focus { box-shadow: none; }
+.mes-list > li .replyTo .btn-primary { float: right; margin-top: 10px; }
