@@ -5,36 +5,22 @@
 	<title>d3js</title>
 </head>
 <body>
-	<ul>
-		<li>1
-			<ul>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ul>
-		</li>
-		<li>2
-			<ul>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ul>
-		</li>
-		<li>3
-			<ul>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-			</ul>
-		</li>
-	</ul>
+	<p>paragraph 1</p>
+	<p>paragraph 2</p>
+	<p>paragraph 3</p>
 	<script src="d3.v4.min.js"></script>
 	<script>
 		var svg = d3.select('body').append('svg');
 
 		svg.attr('width',500).attr('height',500);
 
-		var circle = svg.append('circle').attr('cx','100').attr('cy','100').attr('r','100').attr('fill','red');
+		var ul = d3.selectAll('ul');
+		var list = [1,2,3,4];
+		var update = ul.data(list);
+
+		console.log(update);
+		console.log(update.enter());
+		console.log(update.exit());
 	</script>
 </body>
 </html>
