@@ -9,18 +9,17 @@
 			margin: 0;
 			padding: 0;
 		}
-		ul.en-card-list { height: 100%; padding: 20px; *zoom: 1; box-sizing: border-box; }
+		ul.en-card-list { height: 100%; padding: 20px;}
 		/*ul.en-card-list:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }*/
 
 		ul > li.en-card-item { float: left; width: 33.3333%; height: 50%; box-sizing: border-box; display: block; position: relative; border: 2px solid red;}
 		ul > li.en-card-item .inner { position: absolute; left: 10px; right: 10px; top: 10px; bottom: 10px;}
-		ul > li:nth-last-child(1):first-child, ul > li:nth-last-child(1):first-child ~ li { width: 33.33333%; height: 50%; top: 25%; left: 33.33333%; }
-		ul > li:nth-last-child(2):first-child, ul > li:nth-last-child(2):first-child ~ li { width: 33.33333%; height: 50%; top: 25%; left: 16.66666%; }
+		ul > li:nth-last-child(1):first-child, ul > li:nth-last-child(1):first-child ~ li{ width: 33.33333%; height: 50%; top: 25%; left: 33.33333%;}
+		ul > li:nth-last-child(2):first-child, ul > li:nth-last-child(2):first-child ~ li{ width: 33.33333%; height: 50%; top: 25%; left: 16.66666%;}
 		ul > li:nth-last-child(3):first-child, ul > li:nth-last-child(3):first-child ~ li { width: 33.33333%; height: 50%; top: 25%;}
 		ul > li:nth-last-child(4):first-child, ul > li:nth-last-child(4):first-child ~ li { width: 50%; height: 50%; }
-		ul > li:nth-last-child(5):first-child, ul > li:nth-last-child(5):first-child ~ li { width: 50%; height: 50%; }
-		ul > li:nth-last-child(5):first-child ~ li:nth-child(n+3) { width: 33.33333%; }
-		ul > li:nth-last-child(6):first-child, ul > li:nth-last-child(6):first-child ~ li { width: 33.33333%; height: 50%; }
+		ul > li:nth-last-child(5):first-child, ul > li:nth-last-child(5):first-child + li { width: 50%; height: 50%; }
+		ul > li:nth-last-child(6):first-child, ul > li:nth-last-child(6):first-child ~ li { width: 33.33333%; height: 50%; } 
 
 		.en-card-e-preview {height: 600px; padding-bottom: 20px; }
 
@@ -31,10 +30,11 @@
 <body>
 <div class="en-card-e-preview">
 	<ul class="en-card-list">
-		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption">
-		</li>
-		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption">
-		</li>
+		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption"></li>
+		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption"></li>
+		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption"></li>
+		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption"></li>
+		<li class="en-card-item" v-for="(card,index) in cardList" v-bind:class="{appear: appear, open: status[index]}" v-bind:key="card.caption"></li>
 	</ul>
 </div>
 <script>
