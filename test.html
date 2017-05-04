@@ -1,84 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>JS Bin</title>
-  <style>
-      #editor{
-        height: 200px;
-        border: 1px solid black;
-      }
-
-      .piece{
-        display: inline-block;
-        margin-right: 10px;
-        padding: 5px;
-        line-height: 2;
-        background-color: gray;
-      }
-  </style>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <style>
+        .mydiv{
+            width: 400px;
+            height: 400px;
+            background-color: gray;
+        }
+    </style>
 </head>
 <body>
-    <div id="editor" contenteditable></div>
-    <textarea name="" id="" cols="30" rows="10"></textarea>
-</body>
+<div class="mydiv"></div>
 <script>
-var editor = document.getElementById('editor');
-
-editor.addEventListener('keydown', function(e) {
-    /*if (editor.querySelector('br')) {
-        editor.removeChild(editor.querySelector('br'));
-    }*/
-    if (e.keyCode == 13) {
-
-        e.preventDefault();
-
-        var last = this.lastChild;
-
-        if (last && last.nodeType == 3) {
-
-            console.log(last.nodeValue);
-
-            var ele = document.createElement('span');
-
-            ele.className = 'piece';
-            // ele.setAttribute('contenteditable', false);
-            ele.innerHTML = last.nodeValue.trim();
-            this.removeChild(last);
-            this.appendChild(ele);
-            
-            var space = document.createTextNode('\uFEFF');
-            this.appendChild(space);
-            
-            var selection = window.getSelection();
-            var range = document.createRange();
-            if (selection.rangeCount > 0) selection.removeAllRanges();
-            range.selectNode(this.lastChild);
-            selection.addRange(range);
-            selection.collapseToEnd();
-
-        }
-    }
-}, false);
-
-editor.addEventListener('paste', function(e) {
-    e.preventDefault();
-})
-
-editor.addEventListener('click', function(e) {
-    if (this.lastChild && this.lastChild.nodeType != 3) {
-        var space = document.createTextNode('\uFEFF');
-        this.appendChild(space);
-
-        var selection = window.getSelection();
-        var range = document.createRange();
-        if (selection.rangeCount > 0) selection.removeAllRanges();
-        range.selectNode(this.lastChild);
-        selection.addRange(range);
-        selection.collapseToEnd();
-
-    }
-})
+    var div = document.querySelector('.mydiv');
+    var flag = false;
+    div.addEventListener('mousedown', function() {
+        flag = true;
+        console.log('mousedown');
+    })
+    div.addEventListener('mousemove', function() {
+        if (!flag) return;
+        console.log('mousemove');
+    })
+    div.addEventListener('mouseup', function() {
+        flag = false;
+        console.log('mouseup');
+    })
 </script>
+</body>
 </html>
