@@ -26,12 +26,15 @@
     }
     
     .question {
-    	min-height: 44px;
         position: relative;
         margin: 10px;
         outline: 1px solid lime;
         background-color: white;
-    }    
+    }
+
+    .question.divide .handle{
+        display: none;
+    }
 
     .content{
     	padding: 10px;
@@ -169,8 +172,10 @@
     	if (page.hasClass('overflow')) {
     		// 为page的最后一个question
     		if (activeQue.is(':last-child')) {
-    			page.next().prepend($($('#tpl-question').html()).height(activeQue.height() - activeQue.data('maxH')));
+                var newH = activeQue.height() - activeQue.data('maxH');
+    			page.next().prepend($($('#tpl-question').html()).height(newH > 44 ? newH : 44));
     			activeQue.height(activeQue.data('maxH'));
+                activeQue.addClass('divide');
     		}
     	};
 
