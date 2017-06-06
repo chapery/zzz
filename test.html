@@ -24,19 +24,28 @@
     .page.overflow .question{
     	z-index: 2;
     }
+
+    .pageInner{
+        overflow: hidden;
+    }
     
     .question {
         position: relative;
-        margin: 10px;
+        margin: 10px 10px 0;
         outline: 1px solid lime;
         background-color: white;
     }
 
-    .question.divide .handle{
+    .question:last-child{
+        margin-bottom: 10px;
+    }
+
+   .question.primary .handle{
         display: none;
     }
 
     .content{
+        min-height: 24px;
     	padding: 10px;
     }
     .handle {
@@ -59,35 +68,38 @@
 <body ondragstart="return false;" ondragover="return false;" ondrop="return false;">
     <div class="wrapper">
         <div class="page">
-            <div class="question">
-                <div class="content">asdfadfafdasfda</div>
-                <div class="handle"></div>
-            </div>
-            <div class="question">
-                <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
-                <div class="handle"></div>
+            <div class="pageInner">
+                <div class="question">
+                    <div class="content">asdfadfafdasfda</div>
+                    <div class="handle"></div>
+                </div>
+                <div class="question">
+                    <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
+                    <div class="handle"></div>
+                </div>
             </div>
         </div>
         <div class="page">
-            <div class="question">
-                <div class="content">asdfadfafdasfda</div>
-                <div class="handle"></div>
-            </div>
-            <div class="question">
-                <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
-                <div class="handle"></div>
+            <div class="pageInner">
+                <div class="question">
+                    <div class="content">asdfadfafdasfda</div>
+                    <div class="handle"></div>
+                </div>
+                <div class="question">
+                    <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
+                    <div class="handle"></div>
+                </div>
             </div>
         </div>
     </div>
     <script type="text/template" id="tpl-question">
-    	<div class="question">
+    	<div class="question secondary">
     		<div class="content"></div>
     		<div class="handle"></div>
     	</div>
     </script>
     <script src="jquery/jquery.js"></script>
     <script>
-
     var activeQue = null; // 当前拖拽的元素
     var pageHeight = $('.question').height();
     var pageData = [
@@ -152,8 +164,10 @@
 	        	}
 	        } else {
 	        	page.removeClass('overflow');
-	        }
-        };
+	        };
+        } else if (activeQue.hasClass('secondary')) {
+            activeQue.height(h);
+        }
 
         activeQue.data('offsetY', offsetY);
     });
@@ -162,29 +176,66 @@
 
     	if (!activeQue) return;
 
-    	var page = activeQue.parents('.page');
+    	var page = activeQue.parents('.page'); // 当前page
+        var overflowH = page.find('.pageInner').outerHeight(true) - page.innerHeight(); // 超出高度
+        var pageNext; // 下一个page
 
-    	if (activeQue.innerHeight() < activeQue[0].scrollHeight) {
-    		activeQue.height(activeQue[0].scrollHeight);
+    	if (activeQue.innerHeight() < activeQue[0].scrollHeight) { // 高度小于内容高度
+            if (activeQue.hasClass('secondary')) { // 为副编辑区域
+                if (activeQue.data('startH') + activeQue.data('offsetY') <= 0) { // 高度小于或等于0时，将副编辑区域合并到主编辑区域
+                    if (!activeQue.find('.content').html()) { // 副编辑区域内容为空时，直接删除
+                        page.prev().find('.question.primary').removeClass('primary');
+                        activeQue.remove();
+                    }
+                } else { // 高度大于0并且小于最小高度时，设为最小高度
+                    activeQue.height(activeQue[0].scrollHeight > 44 ? activeQue[0].scrollHeight : 44);
+                };
+            } else { // 不为副本
+        		activeQue.height(activeQue[0].scrollHeight);
+            };
     	};
 
-    	// 拖动超出page
-    	if (page.hasClass('overflow')) {
-    		// 为page的最后一个question
-    		if (activeQue.is(':last-child')) {
-                var newH = activeQue.height() - activeQue.data('maxH');
-    			page.next().prepend($($('#tpl-question').html()).height(newH > 44 ? newH : 44));
-    			activeQue.height(activeQue.data('maxH'));
-                activeQue.addClass('divide');
-    		}
+    	if (page.hasClass('overflow')) { // page内容溢出
+            if (activeQue[0] == page.find('.question').last()[0]) { // 为当前page的最后一个question，对question进行分割
+                separate(activeQue, activeQue.data('maxH'), overflowH);
+            } else { // 不为最后一个question
+                // 依次移除当前page的最后一个子元素后，判断page内容是否移除
+                updatePage(page);
+            }
     	};
 
     	page.removeClass('overflow');
+        activeQue.removeData('startH startY offsetY maxH');
     	activeQue = null;
     });
 
-    function update() {
-    	//
+    /**
+     * 分割
+     * @param  {Object} question   需要分割的question，为jquery对象
+     * @param  {Number} primaryH   主编辑区域的高度
+     * @param  {Number} secondaryH 副编辑区域的高度
+     */
+    function separate(question, primaryH, secondaryH) {
+        var page = question.parents('.page');
+        var pageNext = page.next().length ? page.next() : $('<div class="page"><div class="pageInner"></div></div>').appendTo($('.wrapper'));
+        pageNext.find('.pageInner').prepend($($('#tpl-question').html()).height(secondaryH > 44 ? secondaryH : 44));
+        question.height(primaryH);
+        question.addClass('primary');
+    };
+
+    function merge(que_primary, que_secondary) {
+        que_primary.find('.content').append(que_secondary.find('.content').html());
+        que_primary.height(que_primary.height() + que_secondary.outerHeight(true));
+        que_primary.removeClass('primary');
+        que_secondary.remove();
+    };
+
+    function updatePage(startPage) {
+        startPage.add(startPage.nextAll('.page')).each(function(i) {
+            while ($(this).innerHeight() < this.scrollHeight) {
+                $(this).find('.pageInner').children().last().remove();
+            }
+        })
     }
     </script>
 </body>
