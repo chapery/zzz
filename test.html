@@ -77,6 +77,7 @@
                     <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
                     <div class="handle"></div>
                 </div>
+                <h3>title</h3>
             </div>
         </div>
         <div class="page">
@@ -159,9 +160,6 @@
 	        activeQue.height(h);
 	        if (page.innerHeight() < page[0].scrollHeight) {
 	        	page.addClass('overflow');
-	        	if (!activeQue.data('maxH')) {
-		        	activeQue.data('maxH', h - (page[0].scrollHeight - page.innerHeight()));
-	        	}
 	        } else {
 	        	page.removeClass('overflow');
 	        };
@@ -196,12 +194,7 @@
     	};
 
     	if (page.hasClass('overflow')) { // page内容溢出
-            if (activeQue[0] == page.find('.question').last()[0]) { // 为当前page的最后一个question，对question进行分割
-                separate(activeQue, activeQue.data('maxH'), overflowH);
-            } else { // 不为最后一个question
-                // 依次移除当前page的最后一个子元素后，判断page内容是否移除
-                updatePage(page);
-            }
+            updatePage(page);
     	};
 
     	page.removeClass('overflow');
@@ -232,11 +225,24 @@
 
     function updatePage(startPage) {
         startPage.add(startPage.nextAll('.page')).each(function(i) {
+            var lastChild;
+            var overflowH, extraH;
+            var i = 0; // 防止出现死循环
             while ($(this).innerHeight() < this.scrollHeight) {
-                $(this).find('.pageInner').children().last().remove();
-            }
-        })
-    }
+                lastChild = $(this).find('.pageInner').children().last();
+                overflowH = this.scrollHeight - $(this).innerHeight();
+                extraH = lastChild.innerHeight() - lastChild.find('.content').outerHeight(true);
+                if (lastChild.hasClass('question') && overflowH < extraH) { // 为可改变高度的元素且存在多余空间，且去掉多余的空间后能够保证page内容不溢出
+                    separate(lastChild, lastChild.height() - overflowH, overflowH);
+                } else {
+                    lastChild.prependTo($(this).next().find('.pageInner')); // 从当前page移到到下一个page中
+                };
+
+                i++;
+                if (i==20) break;
+            };
+        });
+    };
     </script>
 </body>
 
