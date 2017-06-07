@@ -150,6 +150,7 @@
     }; // 选择器
 
     var activeQue = null; // 当前拖拽的元素
+    var strPage = '<div class="' + S.page.substr(1) + '"><div class="' + S.pageInner.substr(1) + '"></div></div>';
 
     // 移除操作
     $(document).on('click', S.remove, function(e) {
@@ -240,14 +241,28 @@
      * @param  {Number} secondaryH 副编辑区域的高度
      */
     function separate(question, primaryH, secondaryH) {
-        var page = question.parents(S.page);
-        var pageNext;
+
         if (question.hasClass('secondary')) { // 为副编辑区域时，不进行分割操作
             question.height(primaryH);
             return;
         };
-        pageNext = page.next().length ? page.next() : $('<div class="' + S.page.substr(1) + '"><div class="' + S.pageInner.substr(1) + '"></div></div>').appendTo($(S.wrapper));
-        pageNext.find(S.pageInner).prepend($($('#tpl-question').html()).height(secondaryH > 44 ? secondaryH : 44));
+
+        var page = question.parents(S.page);
+        var pageNext;
+        var queSecondary = $($('#tpl-question').html());
+
+        pageNext = page.next().length ? page.next() : $(strPage).appendTo($(S.wrapper));
+        queSecondary.prependTo(pageNext.find(S.pageInner)).height(function() {
+            var _inner = pageNext.find(S.pageInner);
+            var _maxH = pageNext.innerHeight() - (_inner.outerHeight(true) - _inner.height()) - (queSecondary.outerHeight(true) - queSecondary.height());
+            if (secondaryH > _maxH) {
+                return _maxH;
+            } else if (secondaryH > 44) {
+                return secondaryH;
+            } else {
+                return 44;
+            };
+        });
         question.height(primaryH);
         question.addClass('primary');
     };
@@ -282,11 +297,16 @@
     // 延展
     function extend(startPage) {
 
-        startPage.add(startPage.nextAll(S.page)).each(function(i) {
+        var pages = startPage.add(startPage.nextAll(S.page));
+
+        pages.each(function(i) {
+
+            console.log(i);
             var lastChild, // 当前pageInner的最后一个子元素
                 pageNext, // 下一个page
                 overflowH, // 当前page内容超出的高度值
                 extraH; // question多余空间高度
+
             var j = 0; // 防止意外情况出现死循环
 
             mergeOnPage($(this));
@@ -295,8 +315,8 @@
 
                 lastChild = $(this).find(S.pageInner).children().last();
                 overflowH = this.scrollHeight - $(this).innerHeight();
-
                 extraH = lastChild.innerHeight() - lastChild.find(S.content).outerHeight(true);
+
                 if (lastChild.hasClass(S.question.substr(1)) && overflowH <= extraH) { // question元素且存在空白高度，且去掉空白后能够保证page内容不溢出
                     if (lastChild.hasClass('primary')) {
                         reallocate(lastChild, lastChild.height() - overflowH);
@@ -304,7 +324,14 @@
                         separate(lastChild, lastChild.height() - overflowH, overflowH);
                     };
                 } else {
-                    pageNext = $(this).next().length ? $(this).next() : $('<div class="' + S.page.substr(1) + '"><div class="' + S.pageInner.substr(1) + '"></div></div>').appendTo($(S.wrapper));
+                    if ($(this).next().size()) {
+                        pageNext = $(this).next();
+                    } else {
+                        pageNext = $(strPage).appendTo($(S.wrapper));
+                        pages[pages.length] = pageNext[0];
+                        pages.length++;
+                        console.log(pages);
+                    };
                     lastChild.prependTo(pageNext.find(S.pageInner)); // 从当前pageInner移到到下一个pageInner中
                 };
 
@@ -318,12 +345,13 @@
     // 收缩
     function shrink(startPage) {
 
-        startPage.add(startPage.nextAll(S.page)).each(function(i) {
+        startPage.add(startPage.nextAll(S.page)).each(function(i, item, arr) {
 
             var lastChild, // 当前pageInner的最后一个带有primary的子元素
                 firstChild, // 下一个page中pageInner第一个子元素
                 overflowH, // 当前page空白高度
                 extraH; // firstChild空白高度（若为question元素）
+
             var j = 0; // 防止意外情况出现死循环
 
             mergeOnPage($(this));
@@ -373,6 +401,22 @@
     };
 
 })();
+
+/*$.fn.iterator = function(callback) {
+    for (var i = 0; i < this.length; i++) {
+        callback.call(this.get(i), i, this.get(i), this);
+    };
+};
+
+var flexpages = $('.flex-page');
+flexpages.iterator(function(i, item, itself) {
+    console.log(i);
+    if (i == 1) {
+        itself[itself.length] = $('.flex-wrapper')[0];
+        itself.length++;
+        console.log(flexpages)
+    };
+});*/
 </script>
 </body>
 
