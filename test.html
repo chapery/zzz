@@ -10,45 +10,45 @@
     	margin: 0;
     	/*height: 100%;*/
     }
-    .wrapper {}
+    .flex-wrapper {}
     
-    .page {
+    .flex-page {
         height: 200px;
         margin: 10px;
         border: 2px solid silver;
     }
-    .page.overflow{
-    	border-color: red;
-    	box-shadow: 0 0 4px red;
-    }
-    .page.overflow .question{
-    	z-index: 2;
+    .flex-page.overflow{
+        position: relative;
+    	z-index: 3;
+        border-color: red;
+        box-shadow: 0 0 4px red;
     }
 
-    .pageInner{
+    .flex-pageInner{
         overflow: hidden;
+        padding:0 10px 10px;
     }
     
-    .question {
+    .flex-question {
         position: relative;
-        margin: 10px 10px 0;
+        z-index: 0;
+        margin-top: 10px;
         outline: 1px solid lime;
         background-color: white;
     }
 
-    .question:last-child{
-        margin-bottom: 10px;
+    .flex-question.primary .flex-handle{
+        display: none;
     }
-
-   .question.primary .handle{
+    .flex-question.secondary .flex-remove{
         display: none;
     }
 
-    .content{
+    .flex-content{
         min-height: 24px;
     	padding: 10px;
     }
-    .handle {
+    .flex-handle {
         position: absolute;
         right: 1px;
         bottom: 1px;
@@ -59,100 +59,124 @@
         cursor: ns-resize;
     }
     
-    .handle:after {
+    .flex-handle:after {
         content: "+";
+    }
+
+    .flex-remove{
+        position: absolute;
+        z-index:0;
+        right: 0;
+        top: 0;
+        width: 16px;
+        height: 16px;
+        background-color: lightgreen;
+        cursor: pointer;
+        text-align: center;
+        line-height: 0;
+    }
+
+    .flex-remove:before,.flex-remove:after{
+        content: "";
+        display: inline-block;
+        height:80%;
+        border-left: 2px solid darkgreen;
+        vertical-align: top;
+    }
+
+    .flex-remove:before{
+        transform: rotate(-45deg);
+    }
+
+    .flex-remove:after{
+        margin-left: -2px;
+        transform: rotate(45deg);
     }
     </style>
 </head>
 
 <body ondragstart="return false;" ondragover="return false;" ondrop="return false;">
-    <div class="wrapper">
-        <div class="page">
-            <div class="pageInner">
-                <div class="question">
-                    <div class="content">asdfadfafdasfda</div>
-                    <div class="handle"></div>
-                </div>
-                <div class="question">
-                    <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
-                    <div class="handle"></div>
-                </div>
-                <h3>title</h3>
+<div class="flex-wrapper">
+    <div class="flex-page">
+        <div class="flex-pageInner">
+            <div class="flex-question">
+                <div class="flex-content">asdfadfafdasfda</div>
+                <div class="flex-remove"></div>
+                <div class="flex-handle"></div>
             </div>
+            <div class="flex-question">
+                <div class="flex-content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
+                <div class="flex-remove"></div>
+                <div class="flex-handle"></div>
+            </div>
+            <h3>title</h3>
+            <h3>title</h3>
         </div>
-        <div class="page">
-            <div class="pageInner">
-                <div class="question">
-                    <div class="content">asdfadfafdasfda</div>
-                    <div class="handle"></div>
-                </div>
-                <div class="question">
-                    <div class="content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
-                    <div class="handle"></div>
-                </div>
+    </div>
+    <div class="flex-page">
+        <div class="flex-pageInner">
+            <div class="flex-question">
+                <div class="flex-content">asdfadfafdasfda</div>
+                <div class="flex-remove"></div>
+                <div class="flex-handle"></div>
+            </div>
+            <h3>title</h3>
+            <h3>title</h3>
+            <div class="flex-question">
+                <div class="flex-content">阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发阿发大厦的发发的发发的发阿萨德法师打发</div>
+                <div class="flex-remove"></div>
+                <div class="flex-handle"></div>
             </div>
         </div>
     </div>
-    <script type="text/template" id="tpl-question">
-    	<div class="question secondary">
-    		<div class="content"></div>
-    		<div class="handle"></div>
-    	</div>
-    </script>
-    <script src="jquery/jquery.js"></script>
-    <script>
-    var activeQue = null; // 当前拖拽的元素
-    var pageHeight = $('.question').height();
-    var pageData = [
-    	{
-    		index: 0, // 页码
-    		queList: [
-	    		{
-	    			type: 0,// 题型
-	    			index: 0, // 索引
-	    			owner: 0, // 所属page
-	    			height: ''
-	    		},
-	    		{
-	    			type: 0,
-	    			index: 1,
-	    			owner: 0,
-	    			height: ''
-	    		}
-    		]
-    	},
-    	{
-    		index: 1,
-    		queList: [
-	    		{
-	    			type: 1,
-	    			index: 0,
-	    			owner: 1,
-	    			height: ''
-	    		},
-	    		{
-	    			type: 1,
-	    			index: 1,
-	    			owner: 1,
-	    			height: ''
-	    		}
-    		]
-    	}
-    ];
+</div>
+<script type="text/template" id="tpl-question">
+	<div class="flex-question secondary">
+		<div class="flex-content"></div>
+		<div class="flex-handle"></div>
+	</div>
+</script>
+<script src="jquery/jquery.js"></script>
+<script>
+(function() {
+    var S = {
+        wrapper: '.flex-wrapper',
+        page: '.flex-page',
+        pageInner: '.flex-pageInner',
+        question: '.flex-question',
+        content: '.flex-content',
+        remove: '.flex-remove',
+        handle: '.flex-handle'
+    }; // 选择器
 
-    $(document).on('mousedown', '.handle', function(e) {
-        activeQue = $(this).parents('.question');
+    var activeQue = null; // 当前拖拽的元素
+
+    // 移除操作
+    $(document).on('click', S.remove, function(e) {
+        var page = $(this).parents(S.page);
+        var que = $(this).parents(S.question);
+        if (que.hasClass('primary')) {
+            page.next().find(S.pageInner).children().first().remove();
+        };
+        que.remove();
+        shrink(page);
+    });
+
+    // 伸缩-mousedown
+    $(document).on('mousedown', S.handle, function(e) {
+        activeQue = $(this).parents(S.question);
         activeQue.data('startH', activeQue.height());
         activeQue.data('startY', e.pageY);
     });
 
+    // 伸缩-mousemove
     $(document).on('mousemove', function(e) {
 
         if (!activeQue) return;
 
     	e.preventDefault();
 
-    	var page = activeQue.parents('.page');
+    	var page = activeQue.parents(S.page);
         var offsetY = e.pageY -activeQue .data('startY');
         var h = activeQue.data('startH') + offsetY;
 
@@ -170,19 +194,22 @@
         activeQue.data('offsetY', offsetY);
     });
 
+    // 伸缩-mouseup
     $(document).on('mouseup', function(e) {
 
     	if (!activeQue) return;
 
-    	var page = activeQue.parents('.page'); // 当前page
-        var overflowH = page.find('.pageInner').outerHeight(true) - page.innerHeight(); // 超出高度
+    	var page = activeQue.parents(S.page); // 当前page
+        var overflowH = page.find(S.pageInner).outerHeight(true) - page.innerHeight(); // 超出高度
+        var offsetY = activeQue.data('offsetY');
         var pageNext; // 下一个page
 
     	if (activeQue.innerHeight() < activeQue[0].scrollHeight) { // 高度小于内容高度
             if (activeQue.hasClass('secondary')) { // 为副编辑区域
-                if (activeQue.data('startH') + activeQue.data('offsetY') <= 0) { // 高度小于或等于0时，将副编辑区域合并到主编辑区域
+                if (activeQue.data('startH') + offsetY <= 0) { // 高度小于或等于0时，将副编辑区域合并到主编辑区域
                     if (!activeQue.find('.content').html()) { // 副编辑区域内容为空时，直接删除
-                        page.prev().find('.question.primary').removeClass('primary');
+                        page.prev().find(S.question + '.primary').removeClass('primary');
+                        // shrink(page);
                         activeQue.remove();
                     }
                 } else { // 高度大于0并且小于最小高度时，设为最小高度
@@ -194,11 +221,15 @@
     	};
 
     	if (page.hasClass('overflow')) { // page内容溢出
-            updatePage(page);
+            extend(page);
     	};
 
+        if (offsetY < 0) {
+            shrink(page);
+        };
+
     	page.removeClass('overflow');
-        activeQue.removeData('startH startY offsetY maxH');
+        activeQue.removeData('startH startY offsetY');
     	activeQue = null;
     });
 
@@ -209,41 +240,140 @@
      * @param  {Number} secondaryH 副编辑区域的高度
      */
     function separate(question, primaryH, secondaryH) {
-        var page = question.parents('.page');
-        var pageNext = page.next().length ? page.next() : $('<div class="page"><div class="pageInner"></div></div>').appendTo($('.wrapper'));
-        pageNext.find('.pageInner').prepend($($('#tpl-question').html()).height(secondaryH > 44 ? secondaryH : 44));
+        var page = question.parents(S.page);
+        var pageNext;
+        if (question.hasClass('secondary')) { // 为副编辑区域时，不进行分割操作
+            question.height(primaryH);
+            return;
+        };
+        pageNext = page.next().length ? page.next() : $('<div class="' + S.page.substr(1) + '"><div class="' + S.pageInner.substr(1) + '"></div></div>').appendTo($(S.wrapper));
+        pageNext.find(S.pageInner).prepend($($('#tpl-question').html()).height(secondaryH > 44 ? secondaryH : 44));
         question.height(primaryH);
         question.addClass('primary');
     };
 
     function merge(que_primary, que_secondary) {
-        que_primary.find('.content').append(que_secondary.find('.content').html());
         que_primary.height(que_primary.height() + que_secondary.outerHeight(true));
         que_primary.removeClass('primary');
         que_secondary.remove();
     };
 
-    function updatePage(startPage) {
-        startPage.add(startPage.nextAll('.page')).each(function(i) {
-            var lastChild;
-            var overflowH, extraH;
-            var i = 0; // 防止出现死循环
+    function mergeOnPage(page) {
+        var que_primary = page.find(S.pageInner).children('.primary');
+        var que_secondary = que_primary.next('.secondary');
+        if (que_secondary.size()) {
+            merge(que_primary, que_secondary);
+        };
+    }
+
+    function reallocate(que_primary, height) {
+        var que_secondary = que_primary.parents(S.page).next().find('.secondary').first();
+        var p_h = que_primary.height();
+        var s_h = que_secondary.height() + p_h - height;
+        que_primary.height(height);
+        if (s_h > 44) {
+            que_secondary.height(s_h);
+        } else {
+            que_primary.removeClass('primary');
+            que_secondary.remove();
+        };
+    };
+
+    // 延展
+    function extend(startPage) {
+
+        startPage.add(startPage.nextAll(S.page)).each(function(i) {
+            var lastChild, // 当前pageInner的最后一个子元素
+                pageNext, // 下一个page
+                overflowH, // 当前page内容超出的高度值
+                extraH; // question多余空间高度
+            var j = 0; // 防止意外情况出现死循环
+
+            mergeOnPage($(this));
+
             while ($(this).innerHeight() < this.scrollHeight) {
-                lastChild = $(this).find('.pageInner').children().last();
+
+                lastChild = $(this).find(S.pageInner).children().last();
                 overflowH = this.scrollHeight - $(this).innerHeight();
-                extraH = lastChild.innerHeight() - lastChild.find('.content').outerHeight(true);
-                if (lastChild.hasClass('question') && overflowH < extraH) { // 为可改变高度的元素且存在多余空间，且去掉多余的空间后能够保证page内容不溢出
-                    separate(lastChild, lastChild.height() - overflowH, overflowH);
+
+                extraH = lastChild.innerHeight() - lastChild.find(S.content).outerHeight(true);
+                if (lastChild.hasClass(S.question.substr(1)) && overflowH <= extraH) { // question元素且存在空白高度，且去掉空白后能够保证page内容不溢出
+                    if (lastChild.hasClass('primary')) {
+                        reallocate(lastChild, lastChild.height() - overflowH);
+                    } else {
+                        separate(lastChild, lastChild.height() - overflowH, overflowH);
+                    };
                 } else {
-                    lastChild.prependTo($(this).next().find('.pageInner')); // 从当前page移到到下一个page中
+                    pageNext = $(this).next().length ? $(this).next() : $('<div class="' + S.page.substr(1) + '"><div class="' + S.pageInner.substr(1) + '"></div></div>').appendTo($(S.wrapper));
+                    lastChild.prependTo(pageNext.find(S.pageInner)); // 从当前pageInner移到到下一个pageInner中
                 };
 
-                i++;
-                if (i==20) break;
+                j++;
+                if (j == 20) break;
+            };
+
+        });
+    };
+
+    // 收缩
+    function shrink(startPage) {
+
+        startPage.add(startPage.nextAll(S.page)).each(function(i) {
+
+            var lastChild, // 当前pageInner的最后一个带有primary的子元素
+                firstChild, // 下一个page中pageInner第一个子元素
+                overflowH, // 当前page空白高度
+                extraH; // firstChild空白高度（若为question元素）
+            var j = 0; // 防止意外情况出现死循环
+
+            mergeOnPage($(this));
+
+            while ($(this).innerHeight() > $(this).find(S.pageInner).outerHeight(true)) { // page存在空白高度
+
+                firstChild = $(this).next().find(S.pageInner).children().first();
+                overflowH = $(this).innerHeight() - $(this).find(S.pageInner).outerHeight(true);
+
+                if (!firstChild.size()) break;
+
+                if (firstChild.hasClass(S.question.substr(1))) { // 为question元素时
+                    extraH = firstChild.innerHeight() - firstChild.find(S.content).outerHeight(true);
+                    if (firstChild.hasClass('secondary')) { // 为副编辑区域
+                        lastChild = $(this).find(S.pageInner).children().last();
+                        if (firstChild.outerHeight(true) <= overflowH) { // 副编辑区域高度小于或等于当前page的空白高度时，合并到主编辑区域
+                            merge(lastChild, firstChild);
+                        } else { // 副编辑区域高度大于当前page的空白高度时，重新分配主编辑区域和副编辑区域高度
+                            reallocate(lastChild, lastChild.height() + overflowH);
+                        };
+                    } else if (firstChild.outerHeight(true) > overflowH) { // 不为副编辑区域且firstChild高度大于当前page的空白高度
+                        if (firstChild.outerHeight(true) - extraH > overflowH) { // firstChild减去空白高度后依然大于当前page的空白高度时，直接中断
+                            break;
+                        } else { // firstChild减去空白高度后小于或等于当前page的空白高度时，将firstChild移到当前pageInner中，并进行分割
+                            $(this).find(S.pageInner).append(firstChild);
+                            separate(firstChild, firstChild.height() - (firstChild.outerHeight(true) - overflowH), firstChild.outerHeight(true) - overflowH);
+                        };
+                    } else { // 其它情况，直接将firstChild移动到当前page中
+                        $(this).find(S.pageInner).append(firstChild);
+                    };
+                } else { // 不为question元素时
+                    if (overflowH < firstChild.outerHeight(true)) { // firstChild高度小于overflowH时，直接中断
+                        break;
+                    } else { // 其它情况，直接将firstChild移动到当前page中
+                        $(this).find(S.pageInner).append(firstChild);
+                    };
+                };
+
+                j++;
+                if (j == 20) break;
+            };
+
+            if (!$(this).find(S.pageInner).children().size()) { // pageInner为空时，移除page
+                $(this).remove();
             };
         });
     };
-    </script>
+
+})();
+</script>
 </body>
 
 </html>
