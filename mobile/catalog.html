@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .catalog-wrapper{}
+
+        .catalog-menu{}
+        .catalog-menu-item{}
+
+        .catalog-title{
+            background-color: gray;
+        }
+        .catalog-title-inner{}
+
+        .catalog-list{}
+        .catalog-list-item{
+            line-height: 30px;
+        }
+
+        .catalog-bar{
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 30px;
+            text-align: center;
+        }
+        .catalog-bar-list{}
+        .catalog-bar-item{}
+        .catalog-bar-item:active{
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="catalog-wrapper">
+        <div class="catalog-menu">
+            <div class="catalog-menu-item" data-index="A">
+                <div class="catalog-title"><div class="catalog-title-inner">A</div></div>
+                <div class="catalog-list">
+                    <div class="catalog-list-item">a1111</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                    <div class="catalog-list-item">a2222</div>
+                </div>
+            </div>
+            <div class="catalog-menu-item" data-index="B">
+                <div class="catalog-title"><div class="catalog-title-inner">B</div></div>
+                <div class="catalog-list">
+                    <div class="catalog-list-item">b1111</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                    <div class="catalog-list-item">b2222</div>
+                </div>
+            </div>
+            <div class="catalog-menu-item" data-index="C">
+                <div class="catalog-title"><div class="catalog-title-inner">C</div></div>
+                <div class="catalog-list">
+                    <div class="catalog-list-item">c1111</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                    <div class="catalog-list-item">c2222</div>
+                </div>
+            </div>
+        </div>
+        <div class="catalog-bar">
+            <div class="catalog-bar-list">
+                <div class="catalog-bar-item">A</div>
+                <div class="catalog-bar-item">B</div>
+                <div class="catalog-bar-item">C</div>
+                <div class="catalog-bar-item">D</div>
+                <div class="catalog-bar-item">E</div>
+                <div class="catalog-bar-item">F</div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    
+        var Q = document.querySelector;
+        var Qs = doument.querySelectorAll;
+
+        var Catalog = function (wrapper, config) {
+            this.dom = {
+                wrapper: Q(wrapper)
+            };
+            // this.dom.menu = Qs('catalog-menu-item')
+        };
+
+        Catalog.constructor = Catalog;
+
+        Catalog.prototype = {
+            init: function () {}
+        };
+
+        new Catalog();
+    </script>
+</body>
+</html>
