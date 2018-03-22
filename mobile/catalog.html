@@ -10,43 +10,56 @@
         dt {
             background-color: gray;
         }
-        .catalog-nav{
+
+        .catalog-nav {
             position: fixed;
             top: 0;
+            bottom: 0;
             right: 0;
             width: 30px;
             text-align: center;
         }
-        .catalog-nav > ul{
-            list-style: none;
+
+        .catalog-nav>ul {
+            display: flex;
+            height: 100%;
+            margin: 0;
             padding: 0;
+            flex-direction: column;
+            list-style: none;
         }
-        .catalog-nav > ul > li{
-            line-height: 30px;
+
+        .catalog-nav>ul>li {
+            flex: 1;
+            line-height: 20px;
         }
-        .catalog-nav > ul > li:active{
+
+        .catalog-nav>ul>li:active {
             background-color: darkgray;
         }
-        .catalog-nav > ul > li.active{
+
+        .catalog-nav>ul>li.active {
             background-color: darkgray;
         }
-        .catalog-indicator{
+
+        .catalog-indicator {
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
             right: 0;
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
             margin: auto;
             background-color: rgba(0, 0, 0, 0.5);
-            line-height: 50px;
+            line-height: 100px;
             text-align: center;
             color: #fff;
-            font-size: 20px;
+            font-size: 40px;
             display: none;
         }
-        .catalog-indicator.active{
+
+        .catalog-indicator.active {
             display: block;
         }
     </style>
@@ -55,72 +68,123 @@
 <body>
     <div class="catalog-container">
         <div class="catalog">
-            <dl data-link="A">
+            <dl data-id="A">
                 <dt>A</dt>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
-                <dd>a111</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
+                <dd>☯</dd>
             </dl>
-            <dl data-link="B">
+            <dl data-id="B">
                 <dt>B</dt>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
-                <dd>b111</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
+                <dd>☴</dd>
             </dl>
-            <dl data-link="C">
+            <dl data-id="C">
                 <dt>C</dt>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
-                <dd>c111</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
+                <dd>☲</dd>
             </dl>
-            <dl data-link="D">
+            <dl data-id="D">
                 <dt>D</dt>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
-                <dd>d111</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
+                <dd>☷</dd>
             </dl>
-        </div>
+            <dl data-id="F">
+                <dt>F</dt>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+                <dd>☳</dd>
+            </dl
+        ></div>
         <div class="catalog-nav">
-            <ul>
-                <li data-href="A">A</li>
-                <li data-href="B">B</li>
-                <li data-href="C">C</li>
-                <li data-href="D">D</li>
-                <li data-href="E">E</li>
-                <li data-href="F">F</li>
-            </ul>
+            <ul></ul>
         </div>
         <div class="catalog-indicator">A</div>
     </div>
@@ -140,9 +204,10 @@
                 list: '.catalog > dl',
                 listTitle: '.catalog > dl > dt',
                 listItem: '.catalog > dl > dd',
-                navWrapper: '.catalog-nav',
+                navWrapper: '.catalog-nav > ul',
                 navItem: '.catalog-nav > ul > li',
-                indicator: '.catalog-indicator'
+                indicator: '.catalog-indicator',
+                scrollElement: 'html'
             };
 
             extend(that.settings, config);
@@ -155,34 +220,124 @@
                 listTitle: that.container.querySelectorAll(that.settings.listTitle),
                 listItem: that.container.querySelectorAll(that.settings.listItem),
                 navWrapper: that.container.querySelector(that.settings.navWrapper),
-                navItem: that.container.querySelectorAll(that.settings.navItem),
-                indicator: that.container.querySelectorAll(that.settings.indicator)
+                navItem: null,
+                indicator: that.container.querySelector(that.settings.indicator),
+                scrollElement: document.querySelector(that.settings.scrollElement)
             };
 
-            that.currentListIndex = 0;
-            that.currentNavIndex = 0;
+            // 当前字符
+            that.current = '#';
+
+            that.activate = false;
 
             that.init();
         };
 
         Catalog.prototype = {
-            
+
             init: function () {
                 var that = this;
 
-                that.doms.navWrapper.addEventListener('click', function (event) {
+                that.renderDom();
+                that.eventHandler();
+            },
 
-                    if (event.target.matches(that.settings.navItem)) {
-                    };
+            renderDom: function () {
+                var that = this;
+
+                var navHtml ='<li data-href="#">#</li>';
+
+                navHtml += Array.apply(null, { length: 26 }).map(function (item, index) {
+                    var alphabet = String.fromCharCode(65 + index);
+                    
+                    return '<li data-href="' + alphabet + '">' + alphabet + '</li>';
+                }).join('');
+
+                that.doms.navWrapper.innerHTML = navHtml;
+                that.doms.navItem = that.container.querySelectorAll(that.settings.navItem);
+            },
+
+            eventHandler: function () {
+                var that = this;
+
+                that.doms.navWrapper.addEventListener('touchstart', function (event) {
+
+                    event.preventDefault();
+
+                    that.activate = true;
+
+                    that.current = event.target.dataset.href;
+
+                    that.doms.indicator.classList.add('active');
+
+                    that.change();
+                });
+
+                document.addEventListener('touchmove', function (event) {
+                    var cy = event.touches[0].clientY;
+
+                    if (!that.activate) return true;
+
+                    event.preventDefault();
+
+                    [].some.call(that.doms.navItem, function (item) {
+                        var rect = item.getBoundingClientRect();
+
+                        if (cy > rect.top && cy < rect.bottom) {
+                            
+                            that.current = item.dataset.href
+
+                            that.change();
+
+                            return true;
+                        }
+                    });
+                });
+
+                document.addEventListener('touchend', function (event) {
+                    var oNavItem;
+
+                    if (!that.activate) return true;
+
+                    that.activate = false;
+
+                    that.current = event.target.dataset.href;
+
+                    that.doms.indicator.classList.remove('active');
+
+                    that.change();
+
+                    oNavItem = that.doms.navWrapper.querySelector('[data-href].active');
+
+                    oNavItem && oNavItem.classList.remove('active');
                 });
             },
 
-            listIntoView: function (listCur) {
-                listCur.scrollIntoView();
+            change: function () {
+                var that = this;
+                var oList = that.doms.listWrapper.querySelector('[data-id="' + that.current + '"]');
+                var oNavItemOld = that.doms.navWrapper.querySelector('[data-href].active');
+                var oNavItem = that.doms.navWrapper.querySelector('[data-href="' + that.current + '"]');
+                var top = that.doms.scrollElement.scrollTop;
+                
+                if (that.current === '#') {
+                     top = 0;
+                }
+
+                if (oList) {
+                    top = oList.offsetTop;
+                }
+                
+                that.doms.scrollElement.scrollTop = top;
+
+                that.doms.indicator.textContent = that.current;
+
+                oNavItemOld && oNavItemOld.classList.remove('active');
+                oNavItem && oNavItem.classList.add('active');
             }
         };
-        
-        Catalog.constructor = Catalog;
+
+        Catalog.prototype.constructor = Catalog;
 
         new Catalog('.catalog-container');
     </script>
