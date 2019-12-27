@@ -3,31 +3,108 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 
 <body>
-    <img src="http://localhost/github/zzz/images/pic.jpg" crossorigin="anonymous">
+    <img id="img" src="https://pingxingzhijia.image.mucang.cn/pingxingzhijia/2019/07/17/10/f21413869c704e58a2887e580c4c9ab0.png!720x0" />
+    <image-handler></image-handler>
     <script>
-        var img = document.querySelector('img')
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
+        document.querySelector('#img').addEventListener('click', function (e) {
+            document.querySelector('image-handler').init(e.target.src)
+        })
+        
+    </script>
+    <script>
+        class imageHandler extends HTMLElement {
+            constructor() {
+                super();
 
-        // img.setAttribute("crossOrigin",'Anonymous')
-        // img.src = 'http://localhost/github/zzz/images/pic.jpg';
+                const shadow = this.attachShadow({ mode: 'open' });
+                const wrap = document.createElement('div');
+                const style = document.createElement('style');
 
-        img.onload = function () {
-            ctx.drawImage(img, 0, 0, 200, 200, 0, 0, 200, 200)
+                wrap.className = 'image-handler-wrap';
+                wrap.innerHTML = `
+                    <canvas class="canvas"></canvas>
+                    <div class="opts">
+                        <button class="rotateLeft">左转90度</button>
+                        <button class="rotateRight">右转90度</button>
+                        <button class="mosaic">马赛克</button>
+                        <button class="reset">还原</button>
+                        <button class="save">保存</button>
+                    </div>
+                `;
+                style.textContent = `
+                    .image-handler-wrap {
+                        position: fixed;
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: none;
+                    }
+                    .image-handler-wrap.active {
+                        display: flex;
+                    }
+                    
+                    .image-handler-wrap canvas {
+                        background: #fff;
+                    }
+                    .image-handler-wrap .opts {
+                        margin-top: 20px;
+                    }
+                    .image-handler-wrap .opts > button {}
+                `;
+                shadow.appendChild(style);
+                shadow.appendChild(wrap);
 
-            canvas.toDataURL()
+                this.wrap = wrap;
+            }
+
+            init(imgUrl) {
+                var img = document.createElement('img');
+                var canvas = this.wrap.querySelector('.canvas');
+                var ctx = canvas.getContext('2d');
+                var rotateAngle = 0;
+                var width = img.naturalWidth;
+                var height = img.naturalHeight;
+
+                this.wrap.classList.add('active');
+
+                img.src = imgUrl;
+
+                img.onload = () => {
+                    width = img.naturalWidth;
+                    height = img.naturalHeight;
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    ctx.drawImage(img, 0, 0);
+                };
+
+                this.wrap.querySelector('.rotateLeft').onclick = function (e) {
+                    rotateAngle += 90;
+
+                    ctx.clearRect(0, 0, width, height);
+                    ctx.setTransform(1, 0, 0, 1, width, 0);
+                    ctx.rotate(90 * Math.PI / 180);
+                    ctx.drawImage(img, 0, 0);
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                }
+            }
         }
-        canvas.width = 200;
-        canvas.height = 200;
 
-        document.body.appendChild(img)
-        document.body.appendChild(canvas)
-
-
+        // Define the new element
+        customElements.define('image-handler', imageHandler);
     </script>
 </body>
 
