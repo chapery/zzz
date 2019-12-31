@@ -10,13 +10,12 @@
 </head>
 
 <body>
-    <img id="img" src="https://pingxingzhijia.image.mucang.cn/pingxingzhijia/2019/07/17/10/f21413869c704e58a2887e580c4c9ab0.png!720x0" />
+    <img id="img" src="https://pingxingzhijia.image.mucang.cn/pingxingzhijia/2019/12/26/16/2e011c063af24cd6a49d1c20058997f6.jpg" />
     <image-handler></image-handler>
     <script>
         document.querySelector('#img').addEventListener('click', function (e) {
             document.querySelector('image-handler').init(e.target.src)
         })
-        
     </script>
     <script>
         class imageHandler extends HTMLElement {
@@ -29,10 +28,12 @@
 
                 wrap.className = 'image-handler-wrap';
                 wrap.innerHTML = `
+                    <div>
                     <canvas class="canvas"></canvas>
+                    </div>
                     <div class="opts">
-                        <button class="rotateLeft">左转90度</button>
-                        <button class="rotateRight">右转90度</button>
+                        <button class="rotate" data-dir="left">左转90度</button>
+                        <button class="rotate" data-dir="right">右转90度</button>
                         <button class="mosaic">马赛克</button>
                         <button class="reset">还原</button>
                         <button class="save">保存</button>
@@ -70,40 +71,133 @@
             }
 
             init(imgUrl) {
+                var _this = this;
                 var img = document.createElement('img');
                 var canvas = this.wrap.querySelector('.canvas');
                 var ctx = canvas.getContext('2d');
                 var rotateAngle = 0;
-                var width = img.naturalWidth;
-                var height = img.naturalHeight;
+                var naturalWidth;
+                var naturalHeight;
+                var width;
+                var height;
+                var mouseActive = false;
+                var blurImageData = [];
 
                 this.wrap.classList.add('active');
+                this.canvas = canvas;
 
+                img.crossOrigin = 'anonymous';
                 img.src = imgUrl;
 
                 img.onload = () => {
-                    width = img.naturalWidth;
-                    height = img.naturalHeight;
+                    width = naturalWidth = img.naturalWidth;
+                    height = naturalHeight = img.naturalHeight;
 
                     canvas.width = width;
                     canvas.height = height;
 
                     ctx.drawImage(img, 0, 0);
+                    blurImageData = this.getBlurImageData();
                 };
 
-                this.wrap.querySelector('.rotateLeft').onclick = function (e) {
-                    rotateAngle += 90;
+                this.wrap.querySelectorAll('.rotate').forEach(function (item) {
+                    item.onclick = function (e) {
+                        var direction = e.currentTarget.dataset.dir;
 
-                    ctx.clearRect(0, 0, width, height);
-                    ctx.setTransform(1, 0, 0, 1, width, 0);
-                    ctx.rotate(90 * Math.PI / 180);
-                    ctx.drawImage(img, 0, 0);
-                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                        if (direction === 'left') {
+                            rotateAngle -= 90;
+                        } else {
+                            rotateAngle += 90;
+                        }
+
+                        if (rotateAngle % 180) {
+                            width = naturalHeight;
+                            height = naturalWidth;
+                        } else {
+                            width = naturalWidth;
+                            height = naturalHeight;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        ctx.clearRect(0, 0, width, height);
+                        ctx.setTransform(1, 0, 0, 1, width / 2, height / 2);
+                        ctx.rotate(rotateAngle * Math.PI / 180);
+                        ctx.drawImage(img, 0, 0, naturalWidth, naturalHeight, -naturalWidth / 2, -naturalHeight / 2, naturalWidth, naturalHeight);
+                    }
+                });
+
+                canvas.onmousedown = function (e) {
+                    mouseActive = true;
                 }
+
+                canvas.onmousemove = function (e) {
+                    if (!mouseActive) {
+                        return true;
+                    }
+
+                    var offsetX = e.offsetX;
+                    var offsetY = e.offsetY;
+
+                    // ctx.putImageData(blurImageData, 0, 0, 0, 0, width, height);
+                    ctx.lineWidth = 2;
+                    ctx.strokeColor = 'red';
+                    ctx.beginPath();
+                    ctx.rect(0, 0, 100, 100);
+                    ctx.fill();
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.beginPath();
+                    ctx.arc(offsetX, offsetY, 5, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+
+                canvas.onmouseup = function (e) {
+                    mouseActive = false;
+                }
+            }
+
+            getBlurImageData() {
+                var ctx = this.canvas.getContext('2d');
+                var w = this.canvas.width;
+                var h = this.canvas.height;
+                var imgData = ctx.getImageData(0, 0, w, h);
+                var temData = ctx.getImageData(0, 0, w, h);
+                var bur = 10;//模糊半径
+
+                for (var i = 0; i < h; i++) {
+                    for (var j = 0; j < w; j++) {
+                        var totalR = 0, totalG = 0, totalB = 0, totalA = 0;
+                        var bt, bb, bl, br;//模糊边界
+                        bt = i - bur < 0 ? 0 : i - bur;
+                        bb = i + bur >= h ? h - 1 : i + bur;
+                        bl = j - bur < 0 ? 0 : j - bur;
+                        br = j + bur >= w ? w - 1 : j + bur;
+                        for (var m = bt; m <= bb; m++) {
+                            for (var n = bl; n <= br; n++) {
+                                var r = m * w + n;
+                                totalR += temData.data[r * 4];
+                                totalG += temData.data[r * 4 + 1];
+                                totalB += temData.data[r * 4 + 2];
+                                totalA += temData.data[r * 4 + 3];
+                            };
+                        };
+
+                        var totalNum = ((br - bl) + 1) * ((bb - bt) + 1);
+                        var p = i * w + j;
+                        imgData.data[p * 4] = totalR / totalNum;
+                        imgData.data[p * 4 + 1] = totalG / totalNum;
+                        imgData.data[p * 4 + 2] = totalB / totalNum;
+                        imgData.data[p * 4 + 3] = totalA / totalNum;
+                    };
+                };
+
+                return imgData;
             }
         }
 
-        // Define the new element
         customElements.define('image-handler', imageHandler);
     </script>
 </body>
