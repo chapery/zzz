@@ -11,30 +11,33 @@
 
 <body>
     <img id="img" src="https://pingxingzhijia.image.mucang.cn/pingxingzhijia/2019/12/26/16/2e011c063af24cd6a49d1c20058997f6.jpg" />
+    <img id="img" src="https://pingxingzhijia.image.mucang.cn/pingxingzhijia/2020/01/06/14/c18caf814c7941ca9687733d79704ef1.jpg" />
     <image-handler></image-handler>
     <script>
-        document.querySelector('#img').addEventListener('click', function (e) {
-            document.querySelector('image-handler').init(e.target.src)
+        document.querySelectorAll('img').forEach(function (item) {
+            item.addEventListener('click', function (e) {
+                document.querySelector('image-handler').render(e.target.src)
+            })
         })
     </script>
     <script>
         class imageHandler extends HTMLElement {
             constructor() {
                 super();
-
-                const shadow = this.attachShadow({ mode: 'open' });
-                const wrap = document.createElement('div');
-                const style = document.createElement('style');
+                var shadow = this.attachShadow({ mode: 'open' });
+                var wrap = document.createElement('div');
+                var style = document.createElement('style');
 
                 wrap.className = 'image-handler-wrap';
+
                 wrap.innerHTML = `
-                    <div>
-                    <canvas class="canvas"></canvas>
+                    <div class="tablet">
+                        <canvas class="canvas"></canvas>
+                        <div class="pointer" hidden></div>
                     </div>
                     <div class="opts">
                         <button class="rotate" data-dir="left">左转90度</button>
                         <button class="rotate" data-dir="right">右转90度</button>
-                        <button class="mosaic">马赛克</button>
                         <button class="reset">还原</button>
                         <button class="save">保存</button>
                     </div>
@@ -50,122 +53,208 @@
                         justify-content: center;
                         flex-direction: column;
                         background-color: rgba(0, 0, 0, 0.5);
+                        overflow-y: auto;
                         display: none;
                     }
                     .image-handler-wrap.active {
                         display: flex;
                     }
                     
-                    .image-handler-wrap canvas {
+                    .image-handler-wrap .tablet {
+                        position: relative;
                         background: #fff;
                     }
+
+                    .image-handler-wrap .canvas {
+                        display: block;
+                        background: #fff;
+                        cursor: pointer;
+                    }
+
+                    .image-handler-wrap .canvas.active {
+                        cursor: none;
+                    }
+
+                    .image-handler-wrap .pointer {
+                        position: absolute;
+                        border: 1px dashed cyan;
+                        border-radius: 50%;
+                        pointer-events: none;
+                        box-sizing: border-box;
+                    }
                     .image-handler-wrap .opts {
-                        margin-top: 20px;
+                        position: sticky;
+                        bottom: 0;
+                        width: 100%;
+                        padding: 20px;
+                        text-align: center;
                     }
                     .image-handler-wrap .opts > button {}
                 `;
+
                 shadow.appendChild(style);
                 shadow.appendChild(wrap);
 
                 this.wrap = wrap;
+                this.init();
             }
 
             init(imgUrl) {
-                var _this = this;
-                var img = document.createElement('img');
-                var canvas = this.wrap.querySelector('.canvas');
-                var ctx = canvas.getContext('2d');
-                var rotateAngle = 0;
-                var naturalWidth;
-                var naturalHeight;
-                var width;
-                var height;
-                var mouseActive = false;
-                var blurImageData = [];
+                var that = this;
+                var ctx;
 
-                this.wrap.classList.add('active');
-                this.canvas = canvas;
+                this.canvas = this.wrap.querySelector('.canvas');
+                this.pointer = this.wrap.querySelector('.pointer');
+                this.img = document.createElement('img');
+                this.rotateAngle = 0;
+                this.naturalWidth = 0;
+                this.naturalHeight = 0;
+                this.width = 0;
+                this.height = 0;
+                this.mouseActive = false;
+                this.blurImage = null;
+                this.brushSize = 20; // 画笔大小
+                this.blurRadius = 8; // 模糊半径
 
-                img.crossOrigin = 'anonymous';
-                img.src = imgUrl;
+                ctx = this.canvas.getContext('2d');
 
-                img.onload = () => {
-                    width = naturalWidth = img.naturalWidth;
-                    height = naturalHeight = img.naturalHeight;
+                this.pointer.style.width = this.brushSize + 'px';
+                this.pointer.style.height = this.brushSize + 'px';
 
-                    canvas.width = width;
-                    canvas.height = height;
+                this.img.crossOrigin = 'anonymous';
 
-                    ctx.drawImage(img, 0, 0);
-                    blurImageData = this.getBlurImageData();
+                this.img.onload = function () {
+                    that.width = that.naturalWidth = that.img.naturalWidth;
+                    that.height = that.naturalHeight = that.img.naturalHeight;
+
+                    that.canvas.width = that.width;
+                    that.canvas.height = that.height;
+
+                    ctx.drawImage(that.img, 0, 0);
+
+                    that.blurImage = that.getBlurImage();
                 };
 
                 this.wrap.querySelectorAll('.rotate').forEach(function (item) {
                     item.onclick = function (e) {
                         var direction = e.currentTarget.dataset.dir;
+                        var dirtyCanvas = document.createElement('canvas');
+                        var dirtyCtx = dirtyCanvas.getContext('2d');
+
+                        dirtyCanvas.width = that.naturalWidth;
+                        dirtyCanvas.height = that.naturalHeight;
+
+                        dirtyCtx.setTransform(1, 0, 0, 1, that.naturalWidth / 2, that.naturalHeight / 2);
+                        dirtyCtx.rotate(-that.rotateAngle * Math.PI / 180);
+                        dirtyCtx.drawImage(that.canvas, 0, 0, that.width, that.height, -that.width / 2, -that.height / 2, that.width, that.height);
 
                         if (direction === 'left') {
-                            rotateAngle -= 90;
+                            that.rotateAngle -= 90;
                         } else {
-                            rotateAngle += 90;
+                            that.rotateAngle += 90;
                         }
 
-                        if (rotateAngle % 180) {
-                            width = naturalHeight;
-                            height = naturalWidth;
-                        } else {
-                            width = naturalWidth;
-                            height = naturalHeight;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        ctx.clearRect(0, 0, width, height);
-                        ctx.setTransform(1, 0, 0, 1, width / 2, height / 2);
-                        ctx.rotate(rotateAngle * Math.PI / 180);
-                        ctx.drawImage(img, 0, 0, naturalWidth, naturalHeight, -naturalWidth / 2, -naturalHeight / 2, naturalWidth, naturalHeight);
+                        that.drawRawImage(dirtyCanvas);
+                        that.blurImage = that.getBlurImage();
                     }
                 });
 
-                canvas.onmousedown = function (e) {
-                    mouseActive = true;
-                }
+                this.wrap.querySelector('.reset').onclick = function (e) {
+                    that.rotateAngle = 0;
+                    that.drawRawImage();
+                };
 
-                canvas.onmousemove = function (e) {
-                    if (!mouseActive) {
+                this.canvas.onmousedown = function (e) {
+                    that.mouseActive = true;
+                    that.pointer.hidden = false;
+                    that.canvas.classList.add('active');
+                    that.brush(e.offsetX, e.offsetY);
+                };
+
+                this.canvas.onmousemove = function (e) {
+                    if (!that.mouseActive) {
                         return true;
                     }
 
-                    var offsetX = e.offsetX;
-                    var offsetY = e.offsetY;
+                    that.brush(e.offsetX, e.offsetY);
+                };
 
-                    // ctx.putImageData(blurImageData, 0, 0, 0, 0, width, height);
-                    ctx.lineWidth = 2;
-                    ctx.strokeColor = 'red';
-                    ctx.beginPath();
-                    ctx.rect(0, 0, 100, 100);
-                    ctx.fill();
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.beginPath();
-                    ctx.arc(offsetX, offsetY, 5, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
+                this.canvas.onmouseup = function (e) {
+                    that.pointer.hidden = true;
+                    that.mouseActive = false;
+                    that.canvas.classList.remove('active');
+                };
 
-                canvas.onmouseup = function (e) {
-                    mouseActive = false;
-                }
+                this.wrap.onclick = function (e) {
+                    if (e.target === e.currentTarget) {
+                        that.wrap.classList.remove('active');
+                    }
+                };
+                
+                document.addEventListener('keyup', function (e) {
+                    if (e.keyCode === 27) {
+                        that.wrap.classList.remove('active');
+                    }
+                })
             }
 
-            getBlurImageData() {
+            render(imgUrl) {
                 var ctx = this.canvas.getContext('2d');
-                var w = this.canvas.width;
-                var h = this.canvas.height;
+                ctx.clearRect(0, 0, this.width, this.height);
+                this.canvas.width = 300;
+                this.canvas.height = 150;
+                ctx.textAlign = 'center';
+                ctx.font = '20px microsoft yahei';
+                ctx.fillText('加载中', this.canvas.width / 2, this.canvas.height / 2);
+                this.wrap.classList.add('active');
+                this.img.src = imgUrl;
+            }
+
+            drawRawImage(dirtyImage) {
+                var ctx = this.canvas.getContext('2d');
+
+                if (this.rotateAngle % 180) {
+                    this.width = this.naturalHeight;
+                    this.height = this.naturalWidth;
+                } else {
+                    this.width = this.naturalWidth;
+                    this.height = this.naturalHeight;
+                }
+
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+
+                ctx.save();
+                ctx.clearRect(0, 0, this.width, this.height);
+                ctx.setTransform(1, 0, 0, 1, this.width / 2, this.height / 2);
+                ctx.rotate(this.rotateAngle * Math.PI / 180);
+                ctx.drawImage(dirtyImage || this.img, 0, 0, this.naturalWidth, this.naturalHeight, -this.naturalWidth / 2, -this.naturalHeight / 2, this.naturalWidth, this.naturalHeight);
+                ctx.restore();
+            }
+
+            brush(x, y) {
+                var ctx = this.canvas.getContext('2d');
+
+                this.pointer.style.left = x - this.brushSize / 2 + 'px';
+                this.pointer.style.top = y - this.brushSize / 2 + 'px';
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y, this.brushSize / 2, Math.PI * 0, Math.PI * 2, false);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(this.blurImage, 0, 0, this.width, this.height);
+                ctx.restore();
+            }
+
+            getBlurImage() {
+                var ctx = this.canvas.getContext('2d');
+                var w = this.width;
+                var h = this.height;
                 var imgData = ctx.getImageData(0, 0, w, h);
                 var temData = ctx.getImageData(0, 0, w, h);
-                var bur = 10;//模糊半径
+                var bur = this.blurRadius;//模糊半径
+                var draftCanvas = this.canvas.cloneNode();
 
                 for (var i = 0; i < h; i++) {
                     for (var j = 0; j < w; j++) {
@@ -194,7 +283,9 @@
                     };
                 };
 
-                return imgData;
+                draftCanvas.getContext('2d').putImageData(imgData, 0, 0, 0, 0, this.width, this.height);
+
+                return draftCanvas;
             }
         }
 
