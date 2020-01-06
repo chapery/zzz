@@ -41,7 +41,7 @@
                         <button class="reset">还原</button>
                         <button class="save">保存</button>
                     </div>
-                `;
+                `.replace(/\n\s*/g, '');
                 style.textContent = `
                     .image-handler-wrap {
                         position: fixed;
@@ -49,20 +49,29 @@
                         right: 0;
                         top: 0;
                         bottom: 0;
-                        align-items: center;
-                        justify-content: center;
-                        flex-direction: column;
                         background-color: rgba(0, 0, 0, 0.5);
                         overflow-y: auto;
                         display: none;
+                        text-align: center;
+                        white-space: nowrap;
                     }
+                    .image-handler-wrap:before {
+                        content: '';
+                        display: inline-block;
+                        height: 100%;
+                        width: 0;
+                        vertical-align: middle;
+                    }
+
                     .image-handler-wrap.active {
-                        display: flex;
+                        display: block;
                     }
                     
                     .image-handler-wrap .tablet {
+                        display: inline-block;
                         position: relative;
                         background: #fff;
+                        vertical-align: middle;
                     }
 
                     .image-handler-wrap .canvas {
@@ -85,11 +94,15 @@
                     .image-handler-wrap .opts {
                         position: sticky;
                         bottom: 0;
+                        left: 0;
                         width: 100%;
-                        padding: 20px;
+                        height: 50px;
+                        margin-top: -50px;
                         text-align: center;
                     }
-                    .image-handler-wrap .opts > button {}
+                    .image-handler-wrap .opts > button {
+                        margin: 0 10px;
+                    }
                 `;
 
                 shadow.appendChild(style);
@@ -155,7 +168,6 @@
                         }
 
                         that.drawRawImage(dirtyCanvas);
-                        that.blurImage = that.getBlurImage();
                     }
                 });
 
@@ -200,14 +212,24 @@
 
             render(imgUrl) {
                 var ctx = this.canvas.getContext('2d');
+
+                this.wrap.classList.add('active');
+
+                if (imgUrl === this.img.src) {
+                    return;
+                }
+
                 ctx.clearRect(0, 0, this.width, this.height);
+
                 this.canvas.width = 300;
                 this.canvas.height = 150;
+
                 ctx.textAlign = 'center';
                 ctx.font = '20px microsoft yahei';
                 ctx.fillText('加载中', this.canvas.width / 2, this.canvas.height / 2);
-                this.wrap.classList.add('active');
+                
                 this.img.src = imgUrl;
+                this.rotateAngle = 0;
             }
 
             drawRawImage(dirtyImage) {
@@ -243,18 +265,28 @@
                 ctx.arc(x, y, this.brushSize / 2, Math.PI * 0, Math.PI * 2, false);
                 ctx.closePath();
                 ctx.clip();
-                ctx.drawImage(this.blurImage, 0, 0, this.width, this.height);
+                ctx.setTransform(1, 0, 0, 1, this.width / 2, this.height / 2);
+                ctx.rotate(this.rotateAngle * Math.PI / 180);
+                ctx.drawImage(this.blurImage, 0, 0, this.naturalWidth, this.naturalHeight, -this.naturalWidth / 2, -this.naturalHeight / 2, this.naturalWidth, this.naturalHeight);
                 ctx.restore();
             }
 
             getBlurImage() {
-                var ctx = this.canvas.getContext('2d');
-                var w = this.width;
-                var h = this.height;
-                var imgData = ctx.getImageData(0, 0, w, h);
-                var temData = ctx.getImageData(0, 0, w, h);
+                var draftCanvas = document.createElement('canvas');
+                var ctx = draftCanvas.getContext('2d');
+                var w = this.naturalWidth;
+                var h = this.naturalHeight;
+                var imgData;
+                var temData;
                 var bur = this.blurRadius;//模糊半径
-                var draftCanvas = this.canvas.cloneNode();
+
+                draftCanvas.width = w;
+                draftCanvas.height = h;
+
+                ctx.drawImage(this.img, 0, 0, w, h);
+
+                imgData = ctx.getImageData(0, 0, w, h);
+                temData = ctx.getImageData(0, 0, w, h);
 
                 for (var i = 0; i < h; i++) {
                     for (var j = 0; j < w; j++) {
@@ -283,7 +315,7 @@
                     };
                 };
 
-                draftCanvas.getContext('2d').putImageData(imgData, 0, 0, 0, 0, this.width, this.height);
+                ctx.putImageData(imgData, 0, 0, 0, 0, this.width, this.height);
 
                 return draftCanvas;
             }
